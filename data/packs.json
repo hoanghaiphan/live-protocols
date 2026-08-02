@@ -1,0 +1,62 @@
+[
+  {
+    "id": "balance-reset",
+    "name": "Balance Reset",
+    "description": "Even coverage across all six categories at a sustainable load for a demanding week.",
+    "habitIds": [
+      "health-sleep-window",
+      "health-mobility-block",
+      "intel-deep-work",
+      "career-top3-force-rank",
+      "fin-weekly-money-review",
+      "create-nonjob-practice",
+      "social-relationship-crm",
+      "career-ship-weekly"
+    ]
+  },
+  {
+    "id": "network-expansion",
+    "name": "Network Expansion",
+    "description": "Social-heavy week without zeroing health or basic execution hygiene.",
+    "habitIds": [
+      "social-high-leverage-outreach",
+      "social-1on1-outside-team",
+      "social-relationship-crm",
+      "social-followup-discipline",
+      "social-host-or-contribute",
+      "health-sleep-window",
+      "career-top3-force-rank",
+      "create-make-for-someone"
+    ]
+  },
+  {
+    "id": "deep-work-recovery",
+    "name": "Deep Work + Recovery",
+    "description": "Maximum cognitive output paired with recovery so you don’t burn out mid-sprint.",
+    "habitIds": [
+      "intel-deep-work",
+      "intel-deliberate-practice",
+      "intel-write-to-clarify",
+      "health-sleep-window",
+      "health-zone2-recovery",
+      "health-evening-cutoff",
+      "health-autoreg-check",
+      "create-unoptimized-play"
+    ]
+  },
+  {
+    "id": "career-capital",
+    "name": "Career Capital",
+    "description": "Visibility, feedback, and optionality—compound career assets outside pure task execution.",
+    "habitIds": [
+      "career-ship-weekly",
+      "career-capital-artifact",
+      "career-feedback-loop",
+      "career-stakeholder-batch",
+      "intel-technical-reading",
+      "fin-compensation-hygiene",
+      "social-high-leverage-outreach",
+      "create-side-project-hour"
+    ]
+  }
+]
