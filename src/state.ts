@@ -287,9 +287,4 @@ export function downloadExport(): void {
   URL.revokeObjectURL(url)
 }
 
-// Back-compat aliases used by older imports (prefer getHabits/getPacks)
-export const habits = {
-  get length() {
-    return getHabits().length
-  },
-}
+

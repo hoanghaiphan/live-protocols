@@ -50,6 +50,7 @@ import {
   recentWeekKeys,
   shiftWeek,
 } from './weeks'
+import { showToast } from './toast'
 
 let filterCategory: Category | 'all' = 'all'
 let expandedId: string | null = null
@@ -61,6 +62,7 @@ type ModalState =
   | { kind: 'pack'; packId: string | null }
 
 let modal: ModalState = null
+let escapeHandler: ((e: KeyboardEvent) => void) | null = null
 
 function protocolHabits(weekKey: string): Habit[] {
   const { habitIds } = loadProtocol(weekKey)
@@ -617,6 +619,13 @@ export function renderApp(root: HTMLElement): void {
   `
 
   bindEvents(root, weekKey)
+
+  if (modal) {
+    const first = root.querySelector<HTMLElement>(
+      '.modal input:not([type="hidden"]), .modal textarea, .modal select',
+    )
+    first?.focus()
+  }
 }
 
 function readHabitForm(form: HTMLFormElement): Habit | null {
@@ -684,6 +693,17 @@ function readPackForm(form: HTMLFormElement): Pack | null {
 function bindEvents(root: HTMLElement, weekKey: string): void {
   const rerender = () => renderApp(root)
 
+  if (escapeHandler) {
+    document.removeEventListener('keydown', escapeHandler)
+  }
+  escapeHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && modal) {
+      modal = null
+      rerender()
+    }
+  }
+  document.addEventListener('keydown', escapeHandler)
+
   root.querySelector('[data-action="week-prev"]')?.addEventListener('click', () => {
     setActiveWeek(shiftWeek(weekKey, -1))
     rerender()
@@ -699,6 +719,7 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
 
   root.querySelector('[data-action="export"]')?.addEventListener('click', () => {
     downloadExport()
+    showToast('Export downloaded (includes customs & progress)', 'ok')
   })
 
   const fileInput = root.querySelector<HTMLInputElement>('#import-file')
@@ -711,10 +732,17 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     try {
       const text = await file.text()
       const blob = JSON.parse(text) as ExportBlob
+      if (blob.version !== 1) {
+        throw new Error('Unsupported export version')
+      }
       importAll(blob)
+      showToast('Import complete', 'ok')
       rerender()
     } catch (e) {
-      alert(`Import failed: ${e instanceof Error ? e.message : String(e)}`)
+      showToast(
+        `Import failed: ${e instanceof Error ? e.message : String(e)}`,
+        'error',
+      )
     } finally {
       fileInput.value = ''
     }
@@ -723,8 +751,6 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
   // Modal open/close
   root.querySelectorAll('[data-action="close-modal"]').forEach((el) => {
     el.addEventListener('click', (ev) => {
-      if (el.hasAttribute('data-stop') && ev.target !== el) return
-      // backdrop: only close if click is on backdrop itself
       if (
         (el as HTMLElement).classList.contains('modal-backdrop') &&
         ev.target !== el
@@ -770,10 +796,11 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
       if (!id) return
       if (!confirm('Delete this custom habit?')) return
       if (!deleteHabit(id)) {
-        alert('Core habits cannot be deleted (you can still edit them).')
+        showToast('Core habits cannot be deleted (edit them instead)', 'error')
         return
       }
       modal = null
+      showToast('Habit deleted', 'ok')
       rerender()
     })
   })
@@ -784,10 +811,11 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
       if (!id) return
       if (!confirm('Delete this custom pack?')) return
       if (!deletePack(id)) {
-        alert('Built-in packs cannot be deleted.')
+        showToast('Built-in packs cannot be deleted', 'error')
         return
       }
       modal = null
+      showToast('Pack deleted', 'ok')
       rerender()
     })
   })
@@ -797,11 +825,16 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     ev.preventDefault()
     const habit = readHabitForm(habitForm)
     if (!habit) {
-      alert('Please fill required fields.')
+      showToast('Please fill required fields', 'error')
+      return
+    }
+    if (!habit.description) {
+      showToast('Description is required', 'error')
       return
     }
     saveHabit(habit)
     modal = null
+    showToast(isCoreHabit(habit.id) ? 'Habit override saved' : 'Habit saved', 'ok')
     rerender()
   })
 
@@ -810,15 +843,16 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     ev.preventDefault()
     const pack = readPackForm(packForm)
     if (!pack) {
-      alert('Please name the pack.')
+      showToast('Please name the pack', 'error')
       return
     }
     if (pack.habitIds.length === 0) {
-      alert('Select at least one habit for the pack.')
+      showToast('Select at least one habit for the pack', 'error')
       return
     }
     savePack(pack)
     modal = null
+    showToast('Pack saved', 'ok')
     rerender()
   })
 
@@ -833,6 +867,7 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
         return
       }
       applyPack(weekKey, id)
+      showToast('Pack applied', 'ok')
       rerender()
     })
   })

@@ -14,9 +14,28 @@ npm run dev
 Open the URL Vite prints (usually `http://localhost:5173`).
 
 ```bash
-npm run build    # production build → dist/
-npm run preview  # serve dist/
+npm run build      # production build → dist/
+npm run preview    # serve dist/
+npm run validate   # typecheck + build + data/scoring checks
 ```
+
+Agent/project rules: see `AGENTS.md` (and parent `Projects/AGENTS.md`).
+
+## Host on Netlify
+
+The repo includes `netlify.toml` (`npm run build` → publish `dist/`).
+
+1. Push to GitHub (already done if remote is up to date, including `netlify.toml`).
+2. Open [app.netlify.com](https://app.netlify.com) → **Add new site** → **Import an existing project**.
+3. Connect GitHub and choose `hoanghaiphan/live-protocols` (or your fork).
+4. Confirm build settings (should auto-fill from `netlify.toml`):
+   - **Build command:** `npm run build`
+   - **Publish directory:** `dist`
+5. Click **Deploy site**. You’ll get a URL like `https://random-name.netlify.app`.
+6. Optional: **Domain settings** → custom domain or rename the site.
+
+Every push to the production branch (usually `main`) triggers a new deploy.  
+User data stays in each visitor’s browser `localStorage` (no Netlify backend required).
 
 ## Sunday-night loop (~2 minutes)
 
