@@ -141,6 +141,7 @@ function emptyHabitDraft(): Habit {
     id: '',
     name: '',
     description: '',
+    how: '',
     category: 'health',
     secondaryTags: [],
     difficulty: { time: 3, willpower: 4, energy: 4 },
@@ -151,6 +152,11 @@ function emptyHabitDraft(): Habit {
     timeEstimateMinutes: 30,
     source: 'local',
   }
+}
+
+/** Format stored how text (newlines) for display. */
+function formatHowHtml(how: string): string {
+  return esc(how).replaceAll('\n', '<br />')
 }
 
 // ── Header ─────────────────────────────────────────────────────
@@ -329,7 +335,10 @@ function renderLibrary(selectedIds: Set<string>): string {
             <h3>${esc(h.name)}${custom ? ' <em class="badge-custom">custom</em>' : ''}</h3>
             <span class="cat-badge" style="${catStyle(h.category)}">${esc(CATEGORY_LABELS[h.category])}</span>
           </header>
-          <p>${esc(h.description)}</p>
+          <div class="habit-why">
+            <span class="field-label">Why</span>
+            <p>${esc(h.description.replace(/^Why:\s*/i, ''))}</p>
+          </div>
           <div class="habit-stats">
             <span>${esc(FREQUENCY_LABELS[h.frequency])}</span>
             <span>${formatMinutes(h.timeEstimateMinutes)}</span>
@@ -338,10 +347,16 @@ function renderLibrary(selectedIds: Set<string>): string {
           </div>
           ${
             open
-              ? `<dl class="habit-details">
-                  <div><dt>MED</dt><dd>${esc(h.med)}</dd></div>
-                  <div><dt>High intensity</dt><dd>${esc(h.highIntensity)}</dd></div>
-                </dl>`
+              ? `<div class="habit-details">
+                  <div class="detail-block">
+                    <span class="field-label">How</span>
+                    <p class="how-steps">${formatHowHtml(h.how || '—')}</p>
+                  </div>
+                  <dl>
+                    <div><dt>MED</dt><dd>${esc(h.med)}</dd></div>
+                    <div><dt>High intensity</dt><dd>${esc(h.highIntensity)}</dd></div>
+                  </dl>
+                </div>`
               : ''
           }
           <footer class="habit-footer">
@@ -456,8 +471,12 @@ function renderHabitModal(): string {
             <input type="text" name="name" value="${esc(habit.name)}" required maxlength="80" placeholder="e.g. Morning pages" />
           </label>
           <label class="field">
-            <span>Description</span>
-            <textarea name="description" rows="2" required maxlength="400" placeholder="What and why">${esc(habit.description)}</textarea>
+            <span>Why (purpose)</span>
+            <textarea name="description" rows="2" required maxlength="500" placeholder="Why this habit matters">${esc(habit.description.replace(/^Why:\s*/i, ''))}</textarea>
+          </label>
+          <label class="field">
+            <span>How (steps)</span>
+            <textarea name="how" rows="4" required maxlength="1200" placeholder="Numbered steps: how to do it">${esc(habit.how)}</textarea>
           </label>
           <div class="field-row">
             <label class="field">
@@ -642,10 +661,13 @@ function readHabitForm(form: HTMLFormElement): Habit | null {
   if (!FREQUENCIES.includes(frequency)) return null
 
   const existing = getHabit(id)
+  const why = String(fd.get('description') ?? '').trim()
+  const how = String(fd.get('how') ?? '').trim()
   return {
     id,
     name,
-    description: String(fd.get('description') ?? '').trim(),
+    description: why.startsWith('Why:') ? why : why ? `Why: ${why}` : '',
+    how,
     category,
     secondaryTags: existing?.secondaryTags ?? [],
     difficulty: {
@@ -829,7 +851,11 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
       return
     }
     if (!habit.description) {
-      showToast('Description is required', 'error')
+      showToast('Why is required', 'error')
+      return
+    }
+    if (!habit.how) {
+      showToast('How (steps) is required', 'error')
       return
     }
     saveHabit(habit)

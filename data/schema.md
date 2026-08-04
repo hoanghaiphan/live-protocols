@@ -6,7 +6,8 @@
 |-------|------|-------|
 | `id` | string | Stable slug, e.g. `intel-deep-work` |
 | `name` | string | Display name |
-| `description` | string | Short why / how |
+| `description` | string | **Why** — purpose / rationale (may start with `Why:`) |
+| `how` | string | **How** — concrete steps (newlines OK) |
 | `category` | enum | `health` \| `intelligence` \| `social` \| `finance` \| `career` \| `creativity` |
 | `secondaryTags` | string[] | Optional; **not** used for radar axes in v0.1 |
 | `difficulty.time` | 1–10 | Time cost |

@@ -25,7 +25,10 @@ export interface Effect {
 export interface Habit {
   id: string
   name: string
+  /** Why this habit matters (purpose / rationale). */
   description: string
+  /** How to do it — concrete steps (shown as “How”). */
+  how: string
   category: Category
   secondaryTags: string[]
   difficulty: Difficulty

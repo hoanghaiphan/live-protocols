@@ -2,421 +2,1119 @@
   {
     "id": "health-sleep-window",
     "name": "Sleep window lock",
-    "description": "Keep a consistent sleep/wake window. Highest-ROI recovery lever when training is already hard and the job is demanding.",
+    "description": "Why: Keep a consistent sleep/wake window. Highest-ROI recovery lever when training is already hard and the job is demanding.",
     "category": "health",
-    "secondaryTags": ["recovery"],
-    "difficulty": { "time": 1, "willpower": 7, "energy": 2 },
-    "effect": { "shortTerm": 6, "longTerm": 9, "identity": 7 },
+    "secondaryTags": [
+      "recovery"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 7,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 9,
+      "identity": 7
+    },
     "med": "Stay within ±30 minutes of target bedtime and wake time",
     "highIntensity": "Fixed bedtime, dark/cool room, same wake time including weekends",
     "frequency": "daily",
     "timeEstimateMinutes": 0,
-    "source": "core"
+    "source": "core",
+    "how": "1) Pick a target bedtime and wake time that yield enough sleep.\n2) Set a wind-down alarm 30–45 min before bed.\n3) Hold the window weekdays first; expand to weekends when stable.\n4) If you miss, shift back by ≤30 min—do not “catch up” with a 2-hour swing."
   },
   {
     "id": "health-mobility-block",
     "name": "Targeted mobility block",
-    "description": "Short daily mobility focused on hips, T-spine, and shoulders to offset desk work and heavy training—not another workout.",
+    "description": "Why: Short daily mobility focused on hips, T-spine, and shoulders to offset desk work and heavy training—not another workout.",
     "category": "health",
-    "secondaryTags": ["recovery"],
-    "difficulty": { "time": 3, "willpower": 4, "energy": 3 },
-    "effect": { "shortTerm": 5, "longTerm": 7, "identity": 5 },
+    "secondaryTags": [
+      "recovery"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 5
+    },
     "med": "8 minutes: hips + T-spine",
     "highIntensity": "20 minutes including soft tissue work",
     "frequency": "daily",
     "timeEstimateMinutes": 15,
-    "source": "core"
+    "source": "core",
+    "how": "1) Pick 2–3 problem areas (usually hips, T-spine, shoulders).\n2) Set a timer (8–20 min).\n3) Slow controlled ranges; breathe; no pain chasing.\n4) Do it after wake or before training so it actually happens."
   },
   {
     "id": "health-zone2-recovery",
     "name": "Zone-2 / easy recovery",
-    "description": "Easy aerobic work that aids recovery without competing with hard training sessions.",
+    "description": "Why: Easy aerobic work that aids recovery without competing with hard training sessions.",
     "category": "health",
-    "secondaryTags": ["cardio"],
-    "difficulty": { "time": 5, "willpower": 3, "energy": 4 },
-    "effect": { "shortTerm": 5, "longTerm": 8, "identity": 4 },
+    "secondaryTags": [
+      "cardio"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 3,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 4
+    },
     "med": "25-minute easy walk",
     "highIntensity": "45–60 minutes true Zone-2",
     "frequency": "several_per_week",
     "timeEstimateMinutes": 40,
-    "source": "core"
+    "source": "core",
+    "how": "1) Choose walk, easy bike, or easy jog.\n2) Stay conversational pace (roughly Zone 2 / nasal-breathing easy).\n3) 25–60 min; stop if it turns into a hard session.\n4) Log as recovery, not performance."
   },
   {
     "id": "health-evening-cutoff",
     "name": "Stimulant + screen cutoff",
-    "description": "Protect sleep quality under job stress with caffeine timing and evening wind-down rules.",
+    "description": "Why: Protect sleep quality under job stress with caffeine timing and evening wind-down rules.",
     "category": "health",
-    "secondaryTags": ["sleep"],
-    "difficulty": { "time": 1, "willpower": 6, "energy": 2 },
-    "effect": { "shortTerm": 6, "longTerm": 8, "identity": 6 },
+    "secondaryTags": [
+      "sleep"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 6,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 8,
+      "identity": 6
+    },
     "med": "No caffeine after 14:00",
     "highIntensity": "Full wind-down ritual: no stimulating screens last 60 minutes",
+    "frequency": "daily",
+    "timeEstimateMinutes": 0,
+    "source": "core",
+    "how": "1) Hard rule: no caffeine after your cutoff (e.g. 14:00).\n2) Last 45–60 min: dim lights, no work chat, no high-stim content.\n3) Park phone outside reach or in another room if needed.\n4) Replace with low-stim wind-down (stretch, paper book, light tidy)."
+  },
+  {
+    "id": "health-autoreg-check",
+    "name": "Training auto-reg log",
+    "description": "Why: Weekly check of sleep, soreness, and motivation; adjust next week’s volume so you don’t grind into injury.",
+    "category": "health",
+    "secondaryTags": [
+      "training"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 3,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "Score sleep, soreness, motivation 1–10",
+    "highIntensity": "Scores plus explicit volume/intensity adjustment for next week",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 10,
+    "source": "core",
+    "how": "1) Once a week, score sleep, soreness, and motivation 1–10.\n2) If two scores are low, cut volume or intensity next week.\n3) Write one sentence: what changes and why.\n4) Tell your training plan the decision (calendar note is enough)."
+  },
+  {
+    "id": "intel-deep-work",
+    "name": "Protected deep-work block",
+    "description": "Why: One uninterrupted block on the highest-leverage technical task. Phone away, chat snoozed, single outcome defined before start.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "career",
+      "focus"
+    ],
+    "difficulty": {
+      "time": 6,
+      "willpower": 7,
+      "energy": 7
+    },
+    "effect": {
+      "shortTerm": 7,
+      "longTerm": 9,
+      "identity": 8
+    },
+    "med": "45 minutes, one clear outcome, notifications off",
+    "highIntensity": "Two 90-minute blocks with a written shutdown between",
+    "frequency": "daily",
+    "timeEstimateMinutes": 75,
+    "source": "core",
+    "how": "1) Name one outcome before you start.\n2) Kill notifications; phone out of reach.\n3) Work one block (45–90 min) without switching tasks.\n4) Write a 1-line shutdown: done / next."
+  },
+  {
+    "id": "intel-deliberate-practice",
+    "name": "Weak-skill deliberate practice",
+    "description": "Why: Focused drill on a known weak skill (system design, algorithm pattern, tool fluency)—not passive content consumption.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "skill"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 6,
+      "energy": 6
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 9,
+      "identity": 7
+    },
+    "med": "25-minute focused drill with one failure mode",
+    "highIntensity": "60 minutes plus a feedback artifact (review notes or recorded attempt)",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 40,
+    "source": "core",
+    "how": "1) Name the weak skill and one failure mode.\n2) Drill only that for 25–60 min.\n3) Get a feedback signal (tests, review, recording).\n4) Note one adjustment for next session."
+  },
+  {
+    "id": "intel-technical-reading",
+    "name": "Hard technical reading",
+    "description": "Why: Read material above comfort level: papers, RFCs, deep chapters—not news or shallow blogs.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "learning"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 5,
+      "energy": 5
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "15 minutes of hard material",
+    "highIntensity": "Full paper or chapter with written notes",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 30,
+    "source": "core",
+    "how": "1) Choose material harder than comfort (paper, RFC, deep chapter).\n2) Read actively: mark claims you do not yet understand.\n3) Write 3–5 bullet notes or a short summary.\n4) Queue one idea to apply at work."
+  },
+  {
+    "id": "intel-spaced-review",
+    "name": "Spaced system review",
+    "description": "Why: Short spaced review of notes, flashcards, or system knowledge so job context-switching doesn’t rot skills.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "retention"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 3,
+      "longTerm": 8,
+      "identity": 5
+    },
+    "med": "5 minutes flashcards or note review",
+    "highIntensity": "20 minutes including rewrite of weak cards/notes",
+    "frequency": "daily",
+    "timeEstimateMinutes": 12,
+    "source": "core",
+    "how": "1) Open notes or flashcards for 5–20 min.\n2) Prioritize weak cards / fuzzy systems.\n3) Rewrite anything you cannot explain simply.\n4) Stop on the timer—consistency beats marathon reviews."
+  },
+  {
+    "id": "intel-write-to-clarify",
+    "name": "Write-to-clarify",
+    "description": "Why: Force clarity by writing a decision memo, design note, or explanation. Dual asset for thinking and career.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "career",
+      "writing"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 5,
+      "energy": 5
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 8,
+      "identity": 7
+    },
+    "med": "15-minute decision or design memo",
+    "highIntensity": "Publishable note or post",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 40,
+    "source": "core",
+    "how": "1) Pick a decision, design, or confusion.\n2) Write full sentences (not only bullets) for 15–45 min.\n3) State the recommendation or open question at the end.\n4) Optionally share or publish the note."
+  },
+  {
+    "id": "social-high-leverage-outreach",
+    "name": "High-leverage outreach",
+    "description": "Why: Send thoughtful outbound messages to people who matter for learning, work, or opportunity—not generic networking spam.",
+    "category": "social",
+    "secondaryTags": [
+      "network"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 6,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "One thoughtful message with a clear reason",
+    "highIntensity": "Three messages including one specific ask",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 12,
+    "source": "core",
+    "how": "1) Pick one person worth a real connection.\n2) Write a specific, human message (why them, why now).\n3) Include a light ask or offer when natural.\n4) Send—do not draft forever."
+  },
+  {
+    "id": "social-relationship-crm",
+    "name": "Relationship CRM pass",
+    "description": "Why: Weekly scan of key relationships and scheduled next touches. Systems fix the professional habit of forgetting people.",
+    "category": "social",
+    "secondaryTags": [
+      "network"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 8,
+      "identity": 5
+    },
+    "med": "10-minute scan plus two nudges",
+    "highIntensity": "Full list review and calendar next touches",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 20,
+    "source": "core",
+    "how": "1) Open your short list of important people.\n2) Note who you have not touched recently.\n3) Send 1–2 nudges or schedule next contact.\n4) Capture one line of context for next time."
+  },
+  {
+    "id": "social-1on1-outside-team",
+    "name": "1:1 outside immediate team",
+    "description": "Why: Conversation with someone outside your day-to-day team to build weak ties and cross-domain information.",
+    "category": "social",
+    "secondaryTags": [
+      "network"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 5,
+      "energy": 5
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 5
+    },
+    "med": "20-minute async voice or video call",
+    "highIntensity": "In-person coffee or meal",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 40,
+    "source": "core",
+    "how": "1) Invite someone outside your daily team.\n2) Propose a short call or coffee with a clear purpose.\n3) Listen more than you pitch.\n4) Follow up the same day with one useful note."
+  },
+  {
+    "id": "social-followup-discipline",
+    "name": "Same-day follow-up",
+    "description": "Why: Close open loops the same day: thank-yous, action items, promised intros. Reputation compounder.",
+    "category": "social",
+    "secondaryTags": [
+      "reliability"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 5,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 7
+    },
+    "med": "One follow-up that would otherwise slip",
+    "highIntensity": "Clear all open social/professional loops",
+    "frequency": "daily",
+    "timeEstimateMinutes": 8,
+    "source": "core",
+    "how": "1) At day end (or after each meeting), list open loops.\n2) Send thank-yous, action items, or promised intros.\n3) Clear or schedule each loop.\n4) Do not leave “I’ll do it tomorrow” without a time."
+  },
+  {
+    "id": "social-host-or-contribute",
+    "name": "Host or contribute in public",
+    "description": "Why: Show up in a community with real value: useful thread, OSS help, or hosting—not empty networking events.",
+    "category": "social",
+    "secondaryTags": [
+      "community",
+      "career"
+    ],
+    "difficulty": {
+      "time": 6,
+      "willpower": 6,
+      "energy": 6
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 7
+    },
+    "med": "One high-signal public reply or contribution",
+    "highIntensity": "Run a session or ship meaningful OSS/community help",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 60,
+    "source": "core",
+    "how": "1) Pick a public surface (thread, OSS, meetup, community).\n2) Ship something useful: answer, PR, session, write-up.\n3) Optimize for clarity and generosity, not clout.\n4) One real contribution beats three passive lurks."
+  },
+  {
+    "id": "fin-weekly-money-review",
+    "name": "Weekly money review",
+    "description": "Why: Check balances, burn, and runway. Awareness before optimization.",
+    "category": "finance",
+    "secondaryTags": [
+      "awareness"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 3,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "10 minutes: balances and weekly burn",
+    "highIntensity": "Full personal P&L and runway update",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 25,
+    "source": "core",
+    "how": "1) Open accounts: cash, burn, big obligations.\n2) Note runway / surplus in one line.\n3) Flag anything weird (charges, missing transfers).\n4) Decide one next action or “no change.”"
+  },
+  {
+    "id": "fin-surplus-rule",
+    "name": "Surplus allocation rule",
+    "description": "Why: Confirm automated surplus allocation (invest/save). Automation beats weekly willpower.",
+    "category": "finance",
+    "secondaryTags": [
+      "investing"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 2,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 3,
+      "longTerm": 9,
+      "identity": 6
+    },
+    "med": "Confirm auto-transfers ran as intended",
+    "highIntensity": "Rebalance or increase contribution rate",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 10,
+    "source": "core",
+    "how": "1) Confirm auto-save/invest transfers ran.\n2) If surplus grew, raise rate or rebalance deliberately.\n3) Do not re-decide the whole system weekly—execute the rule.\n4) Log the check as done."
+  },
+  {
+    "id": "fin-admin-batch",
+    "name": "Finance admin batch",
+    "description": "Why: Batch bills, receipts, and financial inbox so admin drag doesn’t silently accumulate.",
+    "category": "finance",
+    "secondaryTags": [
+      "admin"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 6,
+      "identity": 4
+    },
+    "med": "15 minutes bills/inbox",
+    "highIntensity": "Taxes, docs, or multi-account catch-up",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 25,
+    "source": "core",
+    "how": "1) Open bills, receipts, and finance inbox only.\n2) Process for a fixed 15–30 min.\n3) Pay, file, or schedule—no browsing other apps.\n4) Leave one written next step if unfinished."
+  },
+  {
+    "id": "fin-compensation-hygiene",
+    "name": "Compensation / market hygiene",
+    "description": "Why: Stay calibrated on market rate and compensation levers. Tech careers under-earn without intentionality.",
+    "category": "finance",
+    "secondaryTags": [
+      "career"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 5,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 3,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "10-minute market or total-comp note",
+    "highIntensity": "One concrete move: doc ask, negotiation prep, or side-leverage research",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 20,
+    "source": "core",
+    "how": "1) Note current total comp vs market (even a rough note).\n2) Pick one lever: skill, visibility, ask, or side optionality.\n3) Do one concrete research or prep action.\n4) Schedule the real conversation when ready—not forever “researching.”"
+  },
+  {
+    "id": "fin-spend-audit-slice",
+    "name": "Targeted spend audit",
+    "description": "Why: Audit one spend category and cut or renegotiate something real—not generic budgeting theater.",
+    "category": "finance",
+    "secondaryTags": [
+      "spending"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 6,
+      "identity": 4
+    },
+    "med": "Review one category for 15 minutes",
+    "highIntensity": "Cut or renegotiate one line item",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 15,
+    "source": "core",
+    "how": "1) Pick one category (subs, food delivery, tools).\n2) Review last 2–4 weeks of spend.\n3) Cut, renegotiate, or consciously keep one line.\n4) Write the decision so you do not re-litigate weekly."
+  },
+  {
+    "id": "career-top3-force-rank",
+    "name": "Daily top-3 force rank",
+    "description": "Why: Name the three outcomes that matter today and kill or defer the rest. Protects deep work from a reactive job.",
+    "category": "career",
+    "secondaryTags": [
+      "focus"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 4,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 7,
+      "identity": 7
+    },
+    "med": "Three ranked bullets before starting work",
+    "highIntensity": "Ranked top-3 plus explicit kill list",
+    "frequency": "daily",
+    "timeEstimateMinutes": 5,
+    "source": "core",
+    "how": "1) Before deep work, list candidate tasks.\n2) Force-rank to exactly three outcomes.\n3) Explicitly kill or defer the rest.\n4) Revisit only if a true emergency appears."
+  },
+  {
+    "id": "career-ship-weekly",
+    "name": "Ship one visible unit",
+    "description": "Why: Ship something others can see: PR, doc, demo, or decision. Progress is shipped, not busy.",
+    "category": "career",
+    "secondaryTags": [
+      "execution"
+    ],
+    "difficulty": {
+      "time": 7,
+      "willpower": 6,
+      "energy": 7
+    },
+    "effect": {
+      "shortTerm": 7,
+      "longTerm": 8,
+      "identity": 8
+    },
+    "med": "Small PR or internal doc",
+    "highIntensity": "User-visible or stakeholder-visible ship",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 90,
+    "source": "core",
+    "how": "1) Define a visible unit (PR, doc, demo, decision).\n2) Time-box to finish something others can see.\n3) Ship even if imperfect; open follow-ups separately.\n4) Announce where stakeholders will notice."
+  },
+  {
+    "id": "career-feedback-loop",
+    "name": "Solicit hard feedback",
+    "description": "Why: Ask for specific, critical feedback on a work product—not vague “how am I doing?”",
+    "category": "career",
+    "secondaryTags": [
+      "growth"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 7,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 7
+    },
+    "med": "One specific feedback ask",
+    "highIntensity": "Structured review of a work product with written takeaways",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 20,
+    "source": "core",
+    "how": "1) Pick a specific work product.\n2) Ask one person for hard, concrete feedback.\n3) Write takeaways; change one behavior next week.\n4) Thank them and close the loop."
+  },
+  {
+    "id": "career-stakeholder-batch",
+    "name": "Stakeholder comms batch",
+    "description": "Why: Proactive status and risk updates in a batch so senior signal doesn’t require meetings all day.",
+    "category": "career",
+    "secondaryTags": [
+      "communication"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 4,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 7,
+      "identity": 6
+    },
+    "med": "Two concise updates",
+    "highIntensity": "Proactive status plus explicit risk callouts",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 20,
+    "source": "core",
+    "how": "1) List stakeholders who need signal.\n2) Send concise status: done / risk / next.\n3) Call out risks early; do not hide bad news.\n4) Batch updates so you are not in meetings all day."
+  },
+  {
+    "id": "career-capital-artifact",
+    "name": "Career-capital artifact",
+    "description": "Why: Build optionality outside the current role: portfolio piece, OSS, talk outline, or public write-up.",
+    "category": "career",
+    "secondaryTags": [
+      "optionality"
+    ],
+    "difficulty": {
+      "time": 6,
+      "willpower": 6,
+      "energy": 6
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 9,
+      "identity": 8
+    },
+    "med": "30 minutes on portfolio, OSS, or talk outline",
+    "highIntensity": "Publish or present something",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 60,
+    "source": "core",
+    "how": "1) Choose portfolio, OSS, talk outline, or public note.\n2) Work 30–90 min on something outside today’s ticket.\n3) Leave a concrete artifact, not only “research.”\n4) Aim to publish or present on a cadence."
+  },
+  {
+    "id": "create-nonjob-practice",
+    "name": "Non-job creative practice",
+    "description": "Why: Create in a domain that is not your job (music, drawing, writing, craft). Prevents pure-optimization identity collapse.",
+    "category": "creativity",
+    "secondaryTags": [
+      "play"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 4,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 8
+    },
+    "med": "20 minutes of practice",
+    "highIntensity": "60 minutes uninterrupted",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 35,
+    "source": "core",
+    "how": "1) Pick a non-job craft (music, drawing, writing, etc.).\n2) Practice 20–60 min with no career KPI.\n3) Make something small; finish a loop.\n4) Protect the slot like a meeting."
+  },
+  {
+    "id": "create-side-project-hour",
+    "name": "Side project deep hour",
+    "description": "Why: One focused hour on a side project with real stakes—often feeds career and intelligence without being pure work.",
+    "category": "creativity",
+    "secondaryTags": [
+      "career",
+      "intelligence"
+    ],
+    "difficulty": {
+      "time": 6,
+      "willpower": 5,
+      "energy": 6
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 7
+    },
+    "med": "30 minutes of real progress",
+    "highIntensity": "Two-hour deep block",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 60,
+    "source": "core",
+    "how": "1) Open the side project with one next action.\n2) Deep block 30–120 min; no day-job tabs.\n3) End with a commit, note, or demoable step.\n4) Weekly is enough if intensity is real."
+  },
+  {
+    "id": "create-unoptimized-play",
+    "name": "Unoptimized play",
+    "description": "Why: Leisure with no productivity angle. Recovery for high-agency people who only “rest” productively.",
+    "category": "creativity",
+    "secondaryTags": [
+      "recovery"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 5,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 6,
+      "identity": 5
+    },
+    "med": "30 minutes pure leisure",
+    "highIntensity": "Half-day deliberately unoptimized",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 60,
+    "source": "core",
+    "how": "1) Schedule pure leisure with no self-improvement angle.\n2) Do the fun thing without tracking it as “recovery protocol.”\n3) Stop when the time is up or when you feel full.\n4) Do not turn it into content or optimization."
+  },
+  {
+    "id": "create-novel-input",
+    "name": "Novel high-quality input",
+    "description": "Why: Consume one high-quality novel input (film, essay, exhibit, album)—not doomscroll—to feed creativity.",
+    "category": "creativity",
+    "secondaryTags": [
+      "input"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 3,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 6,
+      "identity": 5
+    },
+    "med": "One film, long essay, or exhibit",
+    "highIntensity": "Experience plus active notes afterward",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 75,
+    "source": "core",
+    "how": "1) Choose one high-quality film, essay, exhibit, or album.\n2) Consume without multitasking doomscroll.\n3) Optional: 5 bullets on what stuck.\n4) Let it feed ideas; do not force productivity."
+  },
+  {
+    "id": "create-make-for-someone",
+    "name": "Make something for a person",
+    "description": "Why: Make a small gift, tool, note, or artifact for a specific person. Creative + social dual hit; anti-isolation.",
+    "category": "creativity",
+    "secondaryTags": [
+      "social"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 4,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 6,
+      "identity": 6
+    },
+    "med": "Small gift, note, or useful tool",
+    "highIntensity": "Substantial artifact delivered",
+    "frequency": "weekly",
+    "timeEstimateMinutes": 45,
+    "source": "core",
+    "how": "1) Pick a specific person.\n2) Make a gift, note, tool, or helpful artifact for them.\n3) Deliver it (send, give, ship).\n4) Keep the bar human, not performative."
+  },
+  {
+    "id": "health-room-one-percent",
+    "name": "One-percent room upgrade",
+    "description": "Why: Your environment quietly taxes attention and mood. Tiny daily upgrades compound into a space that supports the life you want—without a renovation project.",
+    "category": "health",
+    "secondaryTags": [
+      "environment",
+      "compounding"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 3,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 6
+    },
+    "how": "1) Stand in the room and pick one friction: clutter, lighting, air, dirty surface, missing tool.\n2) Spend 5–15 minutes improving only that (tidy one surface, open window, fix cable, put one thing away).\n3) Stop when the timer ends—1% better is the win.\n4) Optional: photo or one-line log so you see the compound curve.",
+    "med": "5 minutes: clear or fix one visible friction",
+    "highIntensity": "15–20 minutes deep tidy or one meaningful upgrade (lamp, storage, repair)",
+    "frequency": "daily",
+    "timeEstimateMinutes": 10,
+    "source": "core"
+  },
+  {
+    "id": "intel-reflect-write",
+    "name": "Reflect and write in full sentences",
+    "description": "Why: Thoughts stay vague until language forces structure. Full-sentence writing turns fog into decisions, memory, and self-knowledge.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "writing",
+      "reflection"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 7
+    },
+    "how": "1) Open a blank note (not chat).\n2) Write 5–15 minutes in full sentences about what happened, what you think, or what you want.\n3) No outline required; do not bullet-only.\n4) End with one sentence: “So what I believe / will do is …”",
+    "med": "5 minutes, one paragraph",
+    "highIntensity": "15–20 minutes free write plus a clear closing claim",
+    "frequency": "daily",
+    "timeEstimateMinutes": 12,
+    "source": "core"
+  },
+  {
+    "id": "health-off-before-eleven",
+    "name": "Off before eleven",
+    "description": "Why: Recovery and early starts are decided at night. Protecting the body with an early off-switch beats heroic mornings after late screens.",
+    "category": "health",
+    "secondaryTags": [
+      "sleep",
+      "recovery"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 7,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 7,
+      "longTerm": 9,
+      "identity": 7
+    },
+    "how": "1) Set a hard “systems off” time at or before 23:00 (screens, work, stimulating inputs).\n2) Start wind-down 30–45 minutes earlier so off is realistic.\n3) If you slip, do not spiral—resume the next night.\n4) Pair with a fixed wake time so early start becomes default.",
+    "med": "Screens off by 23:00; lights dim",
+    "highIntensity": "Full wind-down from 22:00; phone outside bedroom; consistent early wake",
     "frequency": "daily",
     "timeEstimateMinutes": 0,
     "source": "core"
   },
   {
-    "id": "health-autoreg-check",
-    "name": "Training auto-reg log",
-    "description": "Weekly check of sleep, soreness, and motivation; adjust next week’s volume so you don’t grind into injury.",
-    "category": "health",
-    "secondaryTags": ["training"],
-    "difficulty": { "time": 2, "willpower": 3, "energy": 2 },
-    "effect": { "shortTerm": 4, "longTerm": 8, "identity": 6 },
-    "med": "Score sleep, soreness, motivation 1–10",
-    "highIntensity": "Scores plus explicit volume/intensity adjustment for next week",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 10,
-    "source": "core"
-  },
-  {
-    "id": "intel-deep-work",
-    "name": "Protected deep-work block",
-    "description": "One uninterrupted block on the highest-leverage technical task. Phone away, chat snoozed, single outcome defined before start.",
-    "category": "intelligence",
-    "secondaryTags": ["career", "focus"],
-    "difficulty": { "time": 6, "willpower": 7, "energy": 7 },
-    "effect": { "shortTerm": 7, "longTerm": 9, "identity": 8 },
-    "med": "45 minutes, one clear outcome, notifications off",
-    "highIntensity": "Two 90-minute blocks with a written shutdown between",
-    "frequency": "daily",
-    "timeEstimateMinutes": 75,
-    "source": "core"
-  },
-  {
-    "id": "intel-deliberate-practice",
-    "name": "Weak-skill deliberate practice",
-    "description": "Focused drill on a known weak skill (system design, algorithm pattern, tool fluency)—not passive content consumption.",
-    "category": "intelligence",
-    "secondaryTags": ["skill"],
-    "difficulty": { "time": 5, "willpower": 6, "energy": 6 },
-    "effect": { "shortTerm": 5, "longTerm": 9, "identity": 7 },
-    "med": "25-minute focused drill with one failure mode",
-    "highIntensity": "60 minutes plus a feedback artifact (review notes or recorded attempt)",
+    "id": "career-obvious-problems",
+    "name": "Attack an obvious problem",
+    "description": "Why: Life fills with known, ignored frictions. Spending 30–60 minutes on something obvious builds agency—and you do not need to finish it today.",
+    "category": "career",
+    "secondaryTags": [
+      "execution",
+      "life-ops"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 4,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 7,
+      "identity": 7
+    },
+    "how": "1) Look around (home, work, health admin, relationships): list 2–3 “obvious” problems.\n2) Pick one you have been avoiding.\n3) Work 30–60 minutes doing something real about it (not just planning).\n4) Stop on time even if unfinished; note the next physical action.",
+    "med": "30 minutes on one obvious problem",
+    "highIntensity": "60 minutes with a visible before/after or next-step artifact",
     "frequency": "several_per_week",
-    "timeEstimateMinutes": 40,
+    "timeEstimateMinutes": 45,
     "source": "core"
   },
   {
-    "id": "intel-technical-reading",
-    "name": "Hard technical reading",
-    "description": "Read material above comfort level: papers, RFCs, deep chapters—not news or shallow blogs.",
+    "id": "intel-hypothesis-validate",
+    "name": "Hypothesize, then validate",
+    "description": "Why: Independent thinking is not hot takes—it is forming a clear hypothesis about how something works, then testing it against reality.",
     "category": "intelligence",
-    "secondaryTags": ["learning"],
-    "difficulty": { "time": 4, "willpower": 5, "energy": 5 },
-    "effect": { "shortTerm": 4, "longTerm": 8, "identity": 6 },
-    "med": "15 minutes of hard material",
-    "highIntensity": "Full paper or chapter with written notes",
+    "secondaryTags": [
+      "thinking",
+      "science"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 5,
+      "energy": 5
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 9,
+      "identity": 8
+    },
+    "how": "1) Pick a system (code, market, person, process, body).\n2) Write: “I think X works because Y.”\n3) Design a small test: observe, measure, ask, experiment.\n4) Update the hypothesis in writing: confirmed / revised / rejected.",
+    "med": "One hypothesis + one 10-minute check",
+    "highIntensity": "Write hypothesis, run a deliberate test, document result",
     "frequency": "several_per_week",
     "timeEstimateMinutes": 30,
     "source": "core"
   },
   {
-    "id": "intel-spaced-review",
-    "name": "Spaced system review",
-    "description": "Short spaced review of notes, flashcards, or system knowledge so job context-switching doesn’t rot skills.",
-    "category": "intelligence",
-    "secondaryTags": ["retention"],
-    "difficulty": { "time": 2, "willpower": 4, "energy": 3 },
-    "effect": { "shortTerm": 3, "longTerm": 8, "identity": 5 },
-    "med": "5 minutes flashcards or note review",
-    "highIntensity": "20 minutes including rewrite of weak cards/notes",
+    "id": "social-open-conversation",
+    "name": "Open the conversation",
+    "description": "Why: Connection rarely starts itself. Opening a conversation—and looking for help given or received—turns nearby people into a real network.",
+    "category": "social",
+    "secondaryTags": [
+      "network",
+      "initiative"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 6,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 6
+    },
+    "how": "1) Notice one person nearby (colleague, neighbor, acquaintance, online peer).\n2) Open with a specific, low-pressure line (observation, question, appreciation).\n3) Look for a way to help or a clean ask for help.\n4) Leave the door open; do not force depth on first contact.",
+    "med": "One genuine opener to one person",
+    "highIntensity": "Conversation that includes a clear offer or ask",
     "frequency": "daily",
-    "timeEstimateMinutes": 12,
+    "timeEstimateMinutes": 10,
     "source": "core"
   },
   {
-    "id": "intel-write-to-clarify",
-    "name": "Write-to-clarify",
-    "description": "Force clarity by writing a decision memo, design note, or explanation. Dual asset for thinking and career.",
-    "category": "intelligence",
-    "secondaryTags": ["career", "writing"],
-    "difficulty": { "time": 5, "willpower": 5, "energy": 5 },
-    "effect": { "shortTerm": 6, "longTerm": 8, "identity": 7 },
-    "med": "15-minute decision or design memo",
-    "highIntensity": "Publishable note or post",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 40,
-    "source": "core"
-  },
-  {
-    "id": "social-high-leverage-outreach",
-    "name": "High-leverage outreach",
-    "description": "Send thoughtful outbound messages to people who matter for learning, work, or opportunity—not generic networking spam.",
+    "id": "social-happiness-from-help",
+    "name": "Happiness from help (self or others)",
+    "description": "Why: Mood is more stable when ~80% of good feelings come from helping yourself or others—not only consumption or comparison. Reflection makes the pattern visible.",
     "category": "social",
-    "secondaryTags": ["network"],
-    "difficulty": { "time": 3, "willpower": 6, "energy": 4 },
-    "effect": { "shortTerm": 5, "longTerm": 8, "identity": 6 },
-    "med": "One thoughtful message with a clear reason",
-    "highIntensity": "Three messages including one specific ask",
-    "frequency": "several_per_week",
-    "timeEstimateMinutes": 12,
-    "source": "core"
-  },
-  {
-    "id": "social-relationship-crm",
-    "name": "Relationship CRM pass",
-    "description": "Weekly scan of key relationships and scheduled next touches. Systems fix the professional habit of forgetting people.",
-    "category": "social",
-    "secondaryTags": ["network"],
-    "difficulty": { "time": 3, "willpower": 4, "energy": 3 },
-    "effect": { "shortTerm": 4, "longTerm": 8, "identity": 5 },
-    "med": "10-minute scan plus two nudges",
-    "highIntensity": "Full list review and calendar next touches",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 20,
-    "source": "core"
-  },
-  {
-    "id": "social-1on1-outside-team",
-    "name": "1:1 outside immediate team",
-    "description": "Conversation with someone outside your day-to-day team to build weak ties and cross-domain information.",
-    "category": "social",
-    "secondaryTags": ["network"],
-    "difficulty": { "time": 5, "willpower": 5, "energy": 5 },
-    "effect": { "shortTerm": 5, "longTerm": 7, "identity": 5 },
-    "med": "20-minute async voice or video call",
-    "highIntensity": "In-person coffee or meal",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 40,
-    "source": "core"
-  },
-  {
-    "id": "social-followup-discipline",
-    "name": "Same-day follow-up",
-    "description": "Close open loops the same day: thank-yous, action items, promised intros. Reputation compounder.",
-    "category": "social",
-    "secondaryTags": ["reliability"],
-    "difficulty": { "time": 2, "willpower": 5, "energy": 3 },
-    "effect": { "shortTerm": 5, "longTerm": 7, "identity": 7 },
-    "med": "One follow-up that would otherwise slip",
-    "highIntensity": "Clear all open social/professional loops",
+    "secondaryTags": [
+      "wellbeing",
+      "meaning"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 8
+    },
+    "how": "1) When mood is good (or at day end), pause 2–5 minutes.\n2) Write: what helped—help to self, help to others, or something else?\n3) Aim to steer more of the day toward helpful action when possible.\n4) Note one small helpful act for tomorrow if today was mostly passive pleasure.",
+    "med": "One short reflection when mood is good",
+    "highIntensity": "Daily log: sources of good mood + one deliberate helpful act",
     "frequency": "daily",
     "timeEstimateMinutes": 8,
     "source": "core"
   },
   {
-    "id": "social-host-or-contribute",
-    "name": "Host or contribute in public",
-    "description": "Show up in a community with real value: useful thread, OSS help, or hosting—not empty networking events.",
-    "category": "social",
-    "secondaryTags": ["community", "career"],
-    "difficulty": { "time": 6, "willpower": 6, "energy": 6 },
-    "effect": { "shortTerm": 5, "longTerm": 8, "identity": 7 },
-    "med": "One high-signal public reply or contribution",
-    "highIntensity": "Run a session or ship meaningful OSS/community help",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 60,
-    "source": "core"
-  },
-  {
-    "id": "fin-weekly-money-review",
-    "name": "Weekly money review",
-    "description": "Check balances, burn, and runway. Awareness before optimization.",
-    "category": "finance",
-    "secondaryTags": ["awareness"],
-    "difficulty": { "time": 4, "willpower": 3, "energy": 3 },
-    "effect": { "shortTerm": 5, "longTerm": 8, "identity": 6 },
-    "med": "10 minutes: balances and weekly burn",
-    "highIntensity": "Full personal P&L and runway update",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 25,
-    "source": "core"
-  },
-  {
-    "id": "fin-surplus-rule",
-    "name": "Surplus allocation rule",
-    "description": "Confirm automated surplus allocation (invest/save). Automation beats weekly willpower.",
-    "category": "finance",
-    "secondaryTags": ["investing"],
-    "difficulty": { "time": 2, "willpower": 2, "energy": 2 },
-    "effect": { "shortTerm": 3, "longTerm": 9, "identity": 6 },
-    "med": "Confirm auto-transfers ran as intended",
-    "highIntensity": "Rebalance or increase contribution rate",
-    "frequency": "weekly",
+    "id": "intel-categorize-daily-learning",
+    "name": "Categorize the day’s learning",
+    "description": "Why: Learning without filing becomes noise. End-of-day categorization builds a personal knowledge system and reveals where growth actually happened.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "learning",
+      "meta"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 3,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "how": "1) At day end, list 3–10 things you learned (facts, skills, people, self).\n2) Sort into categories you reuse (e.g. work craft, people, health, money, self).\n3) One line per item is enough.\n4) Star anything that should change behavior tomorrow.",
+    "med": "3 learnings into categories",
+    "highIntensity": "Full day dump + categories + one transfer action",
+    "frequency": "daily",
     "timeEstimateMinutes": 10,
     "source": "core"
   },
   {
-    "id": "fin-admin-batch",
-    "name": "Finance admin batch",
-    "description": "Batch bills, receipts, and financial inbox so admin drag doesn’t silently accumulate.",
-    "category": "finance",
-    "secondaryTags": ["admin"],
-    "difficulty": { "time": 4, "willpower": 4, "energy": 3 },
-    "effect": { "shortTerm": 4, "longTerm": 6, "identity": 4 },
-    "med": "15 minutes bills/inbox",
-    "highIntensity": "Taxes, docs, or multi-account catch-up",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 25,
+    "id": "career-missed-standards-review",
+    "name": "Learn from standards you missed",
+    "description": "Why: Rules and standards only help if misses become learning. Reviewing where you fell short builds integrity without shame spirals.",
+    "category": "career",
+    "secondaryTags": [
+      "reflection",
+      "standards"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 5,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 8,
+      "identity": 8
+    },
+    "how": "1) List personal/professional rules or standards that mattered today.\n2) Mark which you underperformed.\n3) For each miss: what was the real cause (plan, energy, fear, environment)?\n4) Write one concrete adjustment for next time—not a vague “try harder.”",
+    "med": "One missed standard + one lesson",
+    "highIntensity": "Full review of key rules + written adjustments",
+    "frequency": "daily",
+    "timeEstimateMinutes": 10,
     "source": "core"
   },
   {
-    "id": "fin-compensation-hygiene",
-    "name": "Compensation / market hygiene",
-    "description": "Stay calibrated on market rate and compensation levers. Tech careers under-earn without intentionality.",
-    "category": "finance",
-    "secondaryTags": ["career"],
-    "difficulty": { "time": 3, "willpower": 5, "energy": 4 },
-    "effect": { "shortTerm": 3, "longTerm": 8, "identity": 6 },
-    "med": "10-minute market or total-comp note",
-    "highIntensity": "One concrete move: doc ask, negotiation prep, or side-leverage research",
+    "id": "social-ask-for-help",
+    "name": "Ask for help (let others help)",
+    "description": "Why: Asking for help is not weakness—it gives others a chance to be useful and deepens bonds. Appreciation makes help sustainable.",
+    "category": "social",
+    "secondaryTags": [
+      "network",
+      "humility"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 6,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 7
+    },
+    "how": "1) Name one stuck point where another person could help.\n2) Ask specifically (what, by when, why them).\n3) Make it easy to say yes or no.\n4) Thank them and name that you appreciate them in your life—not only the task.",
+    "med": "One clear ask to one person",
+    "highIntensity": "Ask + follow-through + explicit appreciation",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 15,
+    "source": "core"
+  },
+  {
+    "id": "career-ask-how-better",
+    "name": "Ask how you can do better",
+    "description": "Why: Others see strengths and blind spots you cannot. Structured asks for improvement accelerate growth beyond self-assessment.",
+    "category": "career",
+    "secondaryTags": [
+      "feedback",
+      "growth"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 7,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 9,
+      "identity": 7
+    },
+    "how": "1) Pick someone who observes your work or behavior.\n2) Ask: “What’s one strength you see?” and “What’s one way I could do better next time?”\n3) Listen without defending.\n4) Write both answers; choose one improvement experiment for the next week.",
+    "med": "One ask to one person",
+    "highIntensity": "Two perspectives + written improvement experiment",
     "frequency": "weekly",
     "timeEstimateMinutes": 20,
     "source": "core"
   },
   {
-    "id": "fin-spend-audit-slice",
-    "name": "Targeted spend audit",
-    "description": "Audit one spend category and cut or renegotiate something real—not generic budgeting theater.",
-    "category": "finance",
-    "secondaryTags": ["spending"],
-    "difficulty": { "time": 3, "willpower": 4, "energy": 3 },
-    "effect": { "shortTerm": 4, "longTerm": 6, "identity": 4 },
-    "med": "Review one category for 15 minutes",
-    "highIntensity": "Cut or renegotiate one line item",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 15,
-    "source": "core"
-  },
-  {
-    "id": "career-top3-force-rank",
-    "name": "Daily top-3 force rank",
-    "description": "Name the three outcomes that matter today and kill or defer the rest. Protects deep work from a reactive job.",
+    "id": "career-drivers-mindset",
+    "name": "Driver’s mindset",
+    "description": "Why: In any activity, you are responsible for time, manner, and risk. Driver’s mindset is confident, observant, unhurried enough to do it right—without unnecessary risk.",
     "category": "career",
-    "secondaryTags": ["focus"],
-    "difficulty": { "time": 1, "willpower": 4, "energy": 2 },
-    "effect": { "shortTerm": 6, "longTerm": 7, "identity": 7 },
-    "med": "Three ranked bullets before starting work",
-    "highIntensity": "Ranked top-3 plus explicit kill list",
+    "secondaryTags": [
+      "presence",
+      "safety"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 5,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 8
+    },
+    "how": "1) Before the activity, give yourself enough time (no heroic last-second squeeze).\n2) State the goal and the non-negotiable safety/quality bounds.\n3) Stay observant: environment, people, your own state.\n4) Act with calm confidence; avoid unnecessary risk or rushed showboating.",
+    "med": "One activity done with deliberate pace and scan",
+    "highIntensity": "Plan time buffer + explicit risk check + debrief",
     "frequency": "daily",
     "timeEstimateMinutes": 5,
     "source": "core"
   },
   {
-    "id": "career-ship-weekly",
-    "name": "Ship one visible unit",
-    "description": "Ship something others can see: PR, doc, demo, or decision. Progress is shipped, not busy.",
-    "category": "career",
-    "secondaryTags": ["execution"],
-    "difficulty": { "time": 7, "willpower": 6, "energy": 7 },
-    "effect": { "shortTerm": 7, "longTerm": 8, "identity": 8 },
-    "med": "Small PR or internal doc",
-    "highIntensity": "User-visible or stakeholder-visible ship",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 90,
-    "source": "core"
-  },
-  {
-    "id": "career-feedback-loop",
-    "name": "Solicit hard feedback",
-    "description": "Ask for specific, critical feedback on a work product—not vague “how am I doing?”",
-    "category": "career",
-    "secondaryTags": ["growth"],
-    "difficulty": { "time": 3, "willpower": 7, "energy": 4 },
-    "effect": { "shortTerm": 5, "longTerm": 8, "identity": 7 },
-    "med": "One specific feedback ask",
-    "highIntensity": "Structured review of a work product with written takeaways",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 20,
-    "source": "core"
-  },
-  {
-    "id": "career-stakeholder-batch",
-    "name": "Stakeholder comms batch",
-    "description": "Proactive status and risk updates in a batch so senior signal doesn’t require meetings all day.",
-    "category": "career",
-    "secondaryTags": ["communication"],
-    "difficulty": { "time": 3, "willpower": 4, "energy": 4 },
-    "effect": { "shortTerm": 6, "longTerm": 7, "identity": 6 },
-    "med": "Two concise updates",
-    "highIntensity": "Proactive status plus explicit risk callouts",
+    "id": "create-jokes-and-stories",
+    "name": "Jokes, honesty, and stories",
+    "description": "Why: Humor and honest storytelling make you memorable and human. Looking for the funny bit lightens life; telling how you see things builds connection.",
+    "category": "creativity",
+    "secondaryTags": [
+      "social",
+      "play"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 5,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 6,
+      "identity": 7
+    },
+    "how": "1) In conversation or writing, look for the funny or absurd angle—without cruelty.\n2) Prefer honest stories over polished persona.\n3) Tell how you actually see the situation in plain language.\n4) One joke or one short story is enough; do not force a set.",
+    "med": "One honest story or light joke in a real interaction",
+    "highIntensity": "Write or tell a full story with a clear point of view",
     "frequency": "several_per_week",
+    "timeEstimateMinutes": 15,
+    "source": "core"
+  },
+  {
+    "id": "social-love-with-care",
+    "name": "Love with care",
+    "description": "Why: Passion without care becomes self-centered. Loving deeper means tracking others’ well-being—not only your intensity of feeling.",
+    "category": "social",
+    "secondaryTags": [
+      "relationships",
+      "care"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 5,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 9
+    },
+    "how": "1) Pick someone you care about.\n2) Ask (or notice): what would support their well-being today?\n3) Act on care—time, help, listening, protection—not only romantic or self-focused passion.\n4) Check impact: did they feel considered, or only pursued?",
+    "med": "One care-first action for one person",
+    "highIntensity": "Deep conversation or substantial support focused on their needs",
+    "frequency": "daily",
     "timeEstimateMinutes": 20,
-    "source": "core"
-  },
-  {
-    "id": "career-capital-artifact",
-    "name": "Career-capital artifact",
-    "description": "Build optionality outside the current role: portfolio piece, OSS, talk outline, or public write-up.",
-    "category": "career",
-    "secondaryTags": ["optionality"],
-    "difficulty": { "time": 6, "willpower": 6, "energy": 6 },
-    "effect": { "shortTerm": 4, "longTerm": 9, "identity": 8 },
-    "med": "30 minutes on portfolio, OSS, or talk outline",
-    "highIntensity": "Publish or present something",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 60,
-    "source": "core"
-  },
-  {
-    "id": "create-nonjob-practice",
-    "name": "Non-job creative practice",
-    "description": "Create in a domain that is not your job (music, drawing, writing, craft). Prevents pure-optimization identity collapse.",
-    "category": "creativity",
-    "secondaryTags": ["play"],
-    "difficulty": { "time": 4, "willpower": 4, "energy": 4 },
-    "effect": { "shortTerm": 5, "longTerm": 7, "identity": 8 },
-    "med": "20 minutes of practice",
-    "highIntensity": "60 minutes uninterrupted",
-    "frequency": "several_per_week",
-    "timeEstimateMinutes": 35,
-    "source": "core"
-  },
-  {
-    "id": "create-side-project-hour",
-    "name": "Side project deep hour",
-    "description": "One focused hour on a side project with real stakes—often feeds career and intelligence without being pure work.",
-    "category": "creativity",
-    "secondaryTags": ["career", "intelligence"],
-    "difficulty": { "time": 6, "willpower": 5, "energy": 6 },
-    "effect": { "shortTerm": 5, "longTerm": 8, "identity": 7 },
-    "med": "30 minutes of real progress",
-    "highIntensity": "Two-hour deep block",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 60,
-    "source": "core"
-  },
-  {
-    "id": "create-unoptimized-play",
-    "name": "Unoptimized play",
-    "description": "Leisure with no productivity angle. Recovery for high-agency people who only “rest” productively.",
-    "category": "creativity",
-    "secondaryTags": ["recovery"],
-    "difficulty": { "time": 5, "willpower": 5, "energy": 2 },
-    "effect": { "shortTerm": 6, "longTerm": 6, "identity": 5 },
-    "med": "30 minutes pure leisure",
-    "highIntensity": "Half-day deliberately unoptimized",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 60,
-    "source": "core"
-  },
-  {
-    "id": "create-novel-input",
-    "name": "Novel high-quality input",
-    "description": "Consume one high-quality novel input (film, essay, exhibit, album)—not doomscroll—to feed creativity.",
-    "category": "creativity",
-    "secondaryTags": ["input"],
-    "difficulty": { "time": 5, "willpower": 3, "energy": 3 },
-    "effect": { "shortTerm": 4, "longTerm": 6, "identity": 5 },
-    "med": "One film, long essay, or exhibit",
-    "highIntensity": "Experience plus active notes afterward",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 75,
-    "source": "core"
-  },
-  {
-    "id": "create-make-for-someone",
-    "name": "Make something for a person",
-    "description": "Make a small gift, tool, note, or artifact for a specific person. Creative + social dual hit; anti-isolation.",
-    "category": "creativity",
-    "secondaryTags": ["social"],
-    "difficulty": { "time": 5, "willpower": 4, "energy": 4 },
-    "effect": { "shortTerm": 6, "longTerm": 6, "identity": 6 },
-    "med": "Small gift, note, or useful tool",
-    "highIntensity": "Substantial artifact delivered",
-    "frequency": "weekly",
-    "timeEstimateMinutes": 45,
     "source": "core"
   }
 ]

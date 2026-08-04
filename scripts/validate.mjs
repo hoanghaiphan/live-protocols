@@ -68,7 +68,7 @@ function consistencyPercent(habits, completions) {
 const habits = loadJson('data/habits.json')
 const packs = loadJson('data/packs.json')
 
-assert(Array.isArray(habits) && habits.length === 30, 'exactly 30 core habits')
+assert(Array.isArray(habits) && habits.length >= 30, `at least 30 core habits (got ${habits.length})`)
 assert(Array.isArray(packs) && packs.length >= 4, 'at least 4 packs')
 
 const ids = new Set()
@@ -81,7 +81,8 @@ for (const h of habits) {
   assert(CATEGORIES.includes(h.category), `${h.id} valid category`)
   assert(FREQUENCIES.includes(h.frequency), `${h.id} valid frequency`)
   assert(typeof h.name === 'string' && h.name.length > 0, `${h.id} has name`)
-  assert(typeof h.description === 'string' && h.description.length > 0, `${h.id} has description`)
+  assert(typeof h.description === 'string' && h.description.length > 0, `${h.id} has why/description`)
+  assert(typeof h.how === 'string' && h.how.trim().length > 0, `${h.id} has how steps`)
   for (const k of ['time', 'willpower', 'energy']) {
     const v = h.difficulty?.[k]
     assert(v >= 1 && v <= 10, `${h.id} difficulty.${k} in 1–10`)
@@ -94,7 +95,7 @@ for (const h of habits) {
 }
 
 for (const c of CATEGORIES) {
-  assert(catCount[c] === 5, `category ${c} has 5 habits (got ${catCount[c]})`)
+  assert(catCount[c] >= 5, `category ${c} has ≥5 habits (got ${catCount[c]})`)
 }
 
 for (const p of packs) {
@@ -109,7 +110,8 @@ for (const p of packs) {
 const sample = {
   id: 't-daily',
   name: 'T',
-  description: 'd',
+  description: 'Why: d',
+  how: '1) Do the thing.',
   category: 'health',
   secondaryTags: [],
   difficulty: { time: 1, willpower: 1, energy: 1 },

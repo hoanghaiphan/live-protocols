@@ -75,3 +75,5 @@ Manual smoke:
 - Radar axes use **primary category only**; secondary tags are metadata, not split weights.
 - Keep toast host on `document.body` so it survives `#app` re-renders.
 - `scripts/validate.mjs` mirrors scoring formulas for node-side checks; if you change `scoring.ts`, update the script fixtures in the same change.
+- Every habit needs **Why** (`description`) and **How** (`how` steps). MED / high-intensity are dose variants, not a substitute for How.
+- Library size is not frozen at 30; validate checks ≥30 and ≥5 per category.

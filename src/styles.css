@@ -553,6 +553,31 @@ button:disabled {
   color: var(--muted);
 }
 
+.field-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.habit-why p {
+  margin: 0;
+}
+
+.habit-details .detail-block {
+  margin-bottom: 0.55rem;
+}
+
+.how-steps {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
 .habit-stats {
   display: flex;
   flex-wrap: wrap;
