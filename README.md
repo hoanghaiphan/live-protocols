@@ -37,13 +37,14 @@ The repo includes `netlify.toml` (`npm run build` → publish `dist/`).
 Every push to the production branch (usually `main`) triggers a new deploy.  
 User data stays in each visitor’s browser `localStorage` (no Netlify backend required).
 
-## Sunday-night loop (~2 minutes)
+## Daily loop
 
-1. Confirm the ISO week in the header (or jump with ‹ › / Today).
-2. Apply a **starter pack** or add/remove habits from the **master library**.
-3. Glance at the **hex radar** — fix a weak axis if the week looks lopsided.
-4. During the week, use **+/−** on each protocol habit to log hits.
-5. Optionally **Export** JSON monthly so a browser wipe doesn’t erase history.
+1. Keep a sticky **active** set: **Forming** (~6) and **Formed**.
+2. Apply a **pack** from the dropdown (adds missing habits as forming) or **Activate** from the library.
+3. Click a habit name for **Why / How** (view mode). Edit only when you need to change content.
+4. Check off **Mon–Sun** in the active table as you complete habits.
+5. Use week ‹ › only to review another week’s check-ins / **progress overview**.
+6. **Export** periodically so a browser wipe doesn’t erase history.
 
 ## Data you can edit
 

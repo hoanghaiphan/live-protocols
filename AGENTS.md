@@ -4,7 +4,7 @@ Project rules for agents. Parent `Projects/AGENTS.md` still applies; this file w
 
 ## Product outcome
 
-Local-first **weekly life-protocol builder**: pick habits from a master library (plus custom), apply packs, see a **hex radar** across six categories, log weekly hits, export/import state. Target loop: assemble a week in under ~2 minutes.
+Local-first **active habits tracker**: pick habits from a master library (plus custom), apply packs into a sticky **active** set (**forming** vs **formed**), see a **hex radar**, check off **days of the week**, and review multi-week progress.
 
 ## Non-goals (unless asked)
 
@@ -41,7 +41,7 @@ Local-first **weekly life-protocol builder**: pick habits from a master library 
 ## Quality bar
 
 1. **Boot**: `npm run dev` shows library + empty/current protocol; never blank white screen.
-2. **Sunday loop**: apply pack or add habits → radar moves → +/− completions → consistency updates.
+2. **Daily loop**: active table day checkboxes → promote forming→formed when stable (~6 forming).
 3. **Custom data**: add/edit habit, add/edit pack; custom only can delete; export includes customs/overrides.
 4. **Category colors** stay consistent (badges, chips, protocol border, radar labels).
 5. **A11y**: modals have `aria-modal`; Escape closes; first field focuses; visible focus rings.
@@ -71,8 +71,9 @@ Manual smoke:
 - Full `innerHTML` re-render is intentional for v0.1 simplicity; do not half-migrate to incremental DOM without a plan — event bindings must re-run after every render.
 - Core habit “edits” are **overrides** in `lp:habitOverrides`, not mutations of `data/habits.json`.
 - Built-in packs are apply-only; only `custom: true` packs live in `lp:customPacks`.
-- Daily consistency target is **5** (weekday-centric), not 7 — do not “fix” to calendar days without product intent.
-- Radar axes use **primary category only**; secondary tags are metadata, not split weights.
+- Active set is **sticky** (not rebuilt every week). Week switcher only navigates **check-in overview**.
+- Radar max score is **5** (`RADAR_MAX`); primary category only.
+- Day checks live in `lp:day:YYYY-MM-DD`; active list in `lp:activeHabits`.
 - Keep toast host on `document.body` so it survives `#app` re-renders.
 - `scripts/validate.mjs` mirrors scoring formulas for node-side checks; if you change `scoring.ts`, update the script fixtures in the same change.
 - Every habit needs **Why** (`description`) and **How** (`how` steps). MED / high-intensity are dose variants, not a substitute for How.

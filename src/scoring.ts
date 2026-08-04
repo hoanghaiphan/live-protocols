@@ -1,9 +1,9 @@
 import type { Category, Frequency, Habit } from './types'
 import { CATEGORIES } from './types'
 
-/** Weekday-centric professional default (not 7). */
+/** Expected hits per week by frequency (for overview %). */
 export const WEEKLY_TARGETS: Record<Frequency, number> = {
-  daily: 5,
+  daily: 7,
   several_per_week: 3,
   weekly: 1,
 }
@@ -14,10 +14,13 @@ const FREQ_MULTIPLIER: Record<Frequency, number> = {
   weekly: 0.35,
 }
 
-/** ~two solid daily-ish habits max out an axis. */
-export const RADAR_REFERENCE = 6
+/**
+ * Radar fills quickly with a small active set.
+ * Lower max (5) = “smaller maximum value” on the chart.
+ */
+export const RADAR_REFERENCE = 4
+export const RADAR_MAX = 5
 
-/** Soft warning when estimated weekly minutes exceed this. */
 export const TIME_WARN_MINUTES = 12 * 60
 
 export function effectMean(habit: Habit): number {
@@ -33,7 +36,6 @@ export function weeklyTarget(habit: Habit): number {
   return WEEKLY_TARGETS[habit.frequency]
 }
 
-/** Estimated minutes for a full week of targets. */
 export function weeklyTimeEstimate(habits: Habit[]): number {
   return habits.reduce(
     (sum, h) => sum + h.timeEstimateMinutes * weeklyTarget(h),
@@ -54,12 +56,12 @@ export function categoryWeights(habits: Habit[]): Record<Category, number> {
   return weights
 }
 
-/** Normalize raw weights to 0–10 for the radar. */
+/** Scores in 0…RADAR_MAX for the hex chart. */
 export function categoryScores(habits: Habit[]): CategoryScores {
   const weights = categoryWeights(habits)
   const scores = {} as CategoryScores
   for (const c of CATEGORIES) {
-    scores[c] = Math.min(10, weights[c] / RADAR_REFERENCE)
+    scores[c] = Math.min(RADAR_MAX, weights[c] / RADAR_REFERENCE)
   }
   return scores
 }
@@ -71,17 +73,23 @@ export function weakestCategory(scores: CategoryScores): Category | null {
   return entries[0][0]
 }
 
-export function consistencyPercent(
+/** Consistency from day-check map for one ISO week’s dates. */
+export function weekConsistencyPercent(
   habits: Habit[],
-  completions: Record<string, number>,
+  checksByDate: Record<string, Record<string, boolean>>,
+  dateKeys: string[],
 ): number {
-  if (habits.length === 0) return 0
+  if (habits.length === 0 || dateKeys.length === 0) return 0
   let done = 0
   let target = 0
   for (const h of habits) {
     const t = weeklyTarget(h)
     target += t
-    done += Math.min(completions[h.id] ?? 0, t)
+    let hits = 0
+    for (const d of dateKeys) {
+      if (checksByDate[d]?.[h.id]) hits++
+    }
+    done += Math.min(hits, t)
   }
   if (target === 0) return 0
   return Math.round((done / target) * 100)

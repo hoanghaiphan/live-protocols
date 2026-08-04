@@ -54,3 +54,17 @@ export function recentWeekKeys(endKey: string, n: number): string[] {
   }
   return keys
 }
+
+/** Mon–Sun date keys (YYYY-MM-DD, local) for an ISO week. */
+export function weekDateKeys(weekKey: string): string[] {
+  const monday = weekKeyToMonday(weekKey)
+  const keys: string[] = []
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + i)
+    keys.push(
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+    )
+  }
+  return keys
+}

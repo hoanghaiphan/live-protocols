@@ -10,6 +10,9 @@ export type Frequency = 'daily' | 'several_per_week' | 'weekly'
 
 export type HabitSource = 'core' | 'pack' | 'local' | 'community'
 
+/** Forming = still building; formed = stable habit. */
+export type HabitStage = 'forming' | 'formed'
+
 export interface Difficulty {
   time: number
   willpower: number
@@ -25,9 +28,9 @@ export interface Effect {
 export interface Habit {
   id: string
   name: string
-  /** Why this habit matters (purpose / rationale). */
+  /** Why this habit matters. */
   description: string
-  /** How to do it — concrete steps (shown as “How”). */
+  /** How to do it — concrete steps. */
   how: string
   category: Category
   secondaryTags: string[]
@@ -45,8 +48,18 @@ export interface Pack {
   name: string
   description: string
   habitIds: string[]
-  /** Built-in packs omit this or use false; user-created packs are true. */
   custom?: boolean
+}
+
+/** Sticky active set (not rebuilt every week). */
+export interface ActiveHabitEntry {
+  habitId: string
+  stage: HabitStage
+}
+
+/** Day log: which habits were done on YYYY-MM-DD. */
+export interface DayChecks {
+  done: Record<string, boolean>
 }
 
 export interface WeeklyProtocol {
@@ -61,15 +74,19 @@ export interface ProgressLog {
 export interface ExportBlob {
   version: 1
   exportedAt: string
-  activeWeek: string
-  protocols: Record<string, WeeklyProtocol>
-  progress: Record<string, ProgressLog>
-  /** User-created habits (source: local). */
+  /** @deprecated week protocol model — kept for import migration */
+  activeWeek?: string
+  protocols?: Record<string, WeeklyProtocol>
+  progress?: Record<string, ProgressLog>
   customHabits?: Habit[]
-  /** Full habit overrides for core (or any) ids the user edited. */
   habitOverrides?: Record<string, Habit>
-  /** User-created packs. */
   customPacks?: Pack[]
+  /** Sticky active habits */
+  activeHabits?: ActiveHabitEntry[]
+  /** dateKey YYYY-MM-DD → day checks */
+  dayChecks?: Record<string, DayChecks>
+  /** ISO week used for overview navigation */
+  overviewWeek?: string
 }
 
 export const CATEGORIES: Category[] = [
@@ -90,7 +107,6 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   creativity: 'Creativity / Fun',
 }
 
-/** Distinct accent per category (dark-theme friendly). */
 export const CATEGORY_COLORS: Record<Category, string> = {
   health: '#3dbaa0',
   intelligence: '#6b8cff',
@@ -112,7 +128,9 @@ export const FREQUENCIES: Frequency[] = [
   'weekly',
 ]
 
-/** Clamp 1–10 for form fields. */
+/** Suggested max habits still in “forming”. */
+export const FORMING_SOFT_MAX = 6
+
 export function clampScore(n: number, fallback = 5): number {
   if (!Number.isFinite(n)) return fallback
   return Math.min(10, Math.max(1, Math.round(n)))

@@ -1,8 +1,9 @@
 import type { Category } from './types'
 import { CATEGORY_COLORS, CATEGORY_LABELS } from './types'
 import type { CategoryScores } from './scoring'
+import { RADAR_MAX } from './scoring'
 
-/** Clockwise from top: Health → Intelligence → Social → Finance → Career → Creativity */
+/** Clockwise from top */
 const AXIS_ORDER: Category[] = [
   'health',
   'intelligence',
@@ -31,10 +32,11 @@ function scorePolygon(
   cy: number,
   maxR: number,
   scores: CategoryScores,
+  maxScore: number,
 ): string {
   return AXIS_ORDER.map((cat, i) => {
-    const s = Math.max(0, Math.min(10, scores[cat] ?? 0))
-    const r = (s / 10) * maxR
+    const s = Math.max(0, Math.min(maxScore, scores[cat] ?? 0))
+    const r = (s / maxScore) * maxR
     return polar(cx, cy, r, i).join(',')
   }).join(' ')
 }
@@ -43,12 +45,14 @@ export interface RadarRenderOptions {
   scores: CategoryScores
   width?: number
   height?: number
-  idealScore?: number
+  /** Ideal reference ring as fraction of max (0–1). */
+  idealFraction?: number
 }
 
 export function renderRadarSvg(opts: RadarRenderOptions): string {
   const width = opts.width ?? 320
   const height = opts.height ?? 300
+  const maxScore = RADAR_MAX
   const cx = width / 2
   const cy = height / 2 + 4
   const maxR = Math.min(width, height) * 0.36
@@ -67,15 +71,14 @@ export function renderRadarSvg(opts: RadarRenderOptions): string {
     return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" class="radar-spoke" stroke="${color}" stroke-opacity="0.35" />`
   }).join('')
 
-  const idealR = ((opts.idealScore ?? 6.5) / 10) * maxR
-  const ideal = `<polygon points="${ringPoints(cx, cy, idealR)}" class="radar-ideal" />`
+  const idealFrac = opts.idealFraction ?? 0.7
+  const ideal = `<polygon points="${ringPoints(cx, cy, maxR * idealFrac)}" class="radar-ideal" />`
 
-  // Multi-color fill via per-axis gradient approximation: solid muted fill + colored vertices
-  const data = `<polygon points="${scorePolygon(cx, cy, maxR, opts.scores)}" class="radar-fill" />`
+  const data = `<polygon points="${scorePolygon(cx, cy, maxR, opts.scores, maxScore)}" class="radar-fill" />`
 
   const vertices = AXIS_ORDER.map((cat, i) => {
-    const s = Math.max(0, Math.min(10, opts.scores[cat] ?? 0))
-    const r = (s / 10) * maxR
+    const s = Math.max(0, Math.min(maxScore, opts.scores[cat] ?? 0))
+    const r = (s / maxScore) * maxR
     const [x, y] = polar(cx, cy, r, i)
     const color = CATEGORY_COLORS[cat]
     return `<circle cx="${x}" cy="${y}" r="4.5" fill="${color}" stroke="var(--bg-elev, #171b22)" stroke-width="1.5" />`
@@ -92,7 +95,7 @@ export function renderRadarSvg(opts: RadarRenderOptions): string {
     const score = (opts.scores[cat] ?? 0).toFixed(1)
     const color = CATEGORY_COLORS[cat]
     return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" class="radar-label" fill="${color}">${short}
-      <tspan class="radar-label-score" x="${x}" dy="1.1em" fill="${color}" fill-opacity="0.75">${score}</tspan>
+      <tspan class="radar-label-score" x="${x}" dy="1.1em" fill="${color}" fill-opacity="0.75">${score}/${maxScore}</tspan>
     </text>`
   }).join('')
 

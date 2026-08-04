@@ -1,6 +1,9 @@
 import type {
+  ActiveHabitEntry,
+  DayChecks,
   ExportBlob,
   Habit,
+  HabitStage,
   Pack,
   ProgressLog,
   WeeklyProtocol,
@@ -9,7 +12,10 @@ import { isoWeekKey } from './weeks'
 import habitsJson from '../data/habits.json'
 import packsJson from '../data/packs.json'
 
-const KEY_ACTIVE = 'lp:activeWeek'
+const KEY_ACTIVE_HABITS = 'lp:activeHabits'
+const KEY_DAY = (d: string) => `lp:day:${d}`
+const KEY_OVERVIEW_WEEK = 'lp:overviewWeek'
+const KEY_LEGACY_WEEK = 'lp:activeWeek'
 const KEY_PROTOCOL = (w: string) => `lp:protocol:${w}`
 const KEY_PROGRESS = (w: string) => `lp:progress:${w}`
 const KEY_CUSTOM_HABITS = 'lp:customHabits'
@@ -22,8 +28,6 @@ const builtInPacks: Pack[] = (packsJson as Pack[]).map((p) => ({
   custom: false,
 }))
 
-// ── Library merge ──────────────────────────────────────────────
-
 function loadJson<T>(key: string, fallback: T): T {
   const raw = localStorage.getItem(key)
   if (!raw) return fallback
@@ -33,6 +37,17 @@ function loadJson<T>(key: string, fallback: T): T {
     return fallback
   }
 }
+
+function collectKeys(prefix: string): string[] {
+  const keys: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)
+    if (k?.startsWith(prefix)) keys.push(k)
+  }
+  return keys
+}
+
+// ── Library ────────────────────────────────────────────────────
 
 export function getCustomHabits(): Habit[] {
   return loadJson<Habit[]>(KEY_CUSTOM_HABITS, [])
@@ -61,15 +76,12 @@ function saveCustomPacks(list: Pack[]): void {
   localStorage.setItem(KEY_CUSTOM_PACKS, JSON.stringify(list))
 }
 
-/** Full merged library: core + overrides + custom habits. */
 export function getHabits(): Habit[] {
   const overrides = getHabitOverrides()
   const custom = getCustomHabits()
   const coreMerged = coreHabits.map((h) => overrides[h.id] ?? h)
-  // Custom habits may also be overridden if edited after creation
   const customMerged = custom.map((h) => overrides[h.id] ?? h)
   const coreIds = new Set(coreHabits.map((h) => h.id))
-  // Avoid duplicating if a custom id collides (shouldn't)
   const extras = customMerged.filter((h) => !coreIds.has(h.id))
   return [...coreMerged, ...extras]
 }
@@ -95,7 +107,6 @@ export function isCustomHabit(id: string): boolean {
   return getCustomHabits().some((h) => h.id === id) && !isCoreHabit(id)
 }
 
-/** Upsert habit: new local habit or override existing. */
 export function saveHabit(habit: Habit): void {
   if (isCoreHabit(habit.id)) {
     const overrides = getHabitOverrides()
@@ -103,16 +114,11 @@ export function saveHabit(habit: Habit): void {
     saveHabitOverrides(overrides)
     return
   }
-
   const custom = getCustomHabits()
   const idx = custom.findIndex((h) => h.id === habit.id)
   const next = { ...habit, source: 'local' as const }
-  if (idx >= 0) {
-    custom[idx] = next
-  } else {
-    custom.push(next)
-  }
-  // Clear any stale override for this custom id
+  if (idx >= 0) custom[idx] = next
+  else custom.push(next)
   const overrides = getHabitOverrides()
   if (overrides[habit.id]) {
     delete overrides[habit.id]
@@ -121,47 +127,28 @@ export function saveHabit(habit: Habit): void {
   saveCustomHabits(custom)
 }
 
-/** Delete a user-created habit (core habits cannot be deleted). */
 export function deleteHabit(id: string): boolean {
   if (isCoreHabit(id)) return false
-  const custom = getCustomHabits().filter((h) => h.id !== id)
-  saveCustomHabits(custom)
+  saveCustomHabits(getCustomHabits().filter((h) => h.id !== id))
   const overrides = getHabitOverrides()
   if (overrides[id]) {
     delete overrides[id]
     saveHabitOverrides(overrides)
   }
-  // Strip from custom packs
-  const packs = getCustomPacks().map((p) => ({
-    ...p,
-    habitIds: p.habitIds.filter((hid) => hid !== id),
-  }))
-  saveCustomPacks(packs)
-  // Strip from all week protocols
-  for (const k of collectKeys('lp:protocol:')) {
-    const week = k.slice('lp:protocol:'.length)
-    const protocol = loadProtocol(week)
-    if (protocol.habitIds.includes(id)) {
-      saveProtocol(week, {
-        ...protocol,
-        habitIds: protocol.habitIds.filter((hid) => hid !== id),
-      })
-    }
-  }
+  saveCustomPacks(
+    getCustomPacks().map((p) => ({
+      ...p,
+      habitIds: p.habitIds.filter((hid) => hid !== id),
+    })),
+  )
+  removeActiveHabit(id)
   return true
 }
 
 export function savePack(pack: Pack): void {
-  if (!pack.custom && builtInPacks.some((p) => p.id === pack.id)) {
-    // Don't mutate built-ins; save as custom clone if user "edits"
-    // Built-in packs are apply-only; custom packs only in KEY_CUSTOM_PACKS
-    return
-  }
+  if (!pack.custom && builtInPacks.some((p) => p.id === pack.id)) return
   const list = getCustomPacks()
-  const next: Pack = {
-    ...pack,
-    custom: true,
-  }
+  const next: Pack = { ...pack, custom: true }
   const idx = list.findIndex((p) => p.id === pack.id)
   if (idx >= 0) list[idx] = next
   else list.push(next)
@@ -179,99 +166,234 @@ export function getPack(id: string): Pack | undefined {
   return getPacks().find((p) => p.id === id)
 }
 
-// ── Week / progress ────────────────────────────────────────────
+// ── Active habits (sticky) ─────────────────────────────────────
 
-export function getActiveWeek(): string {
-  return localStorage.getItem(KEY_ACTIVE) ?? isoWeekKey()
-}
-
-export function setActiveWeek(weekKey: string): void {
-  localStorage.setItem(KEY_ACTIVE, weekKey)
-}
-
-export function loadProtocol(weekKey: string): WeeklyProtocol {
-  const raw = localStorage.getItem(KEY_PROTOCOL(weekKey))
-  if (!raw) return { habitIds: [] }
-  try {
-    const parsed = JSON.parse(raw) as WeeklyProtocol
-    return {
-      habitIds: Array.isArray(parsed.habitIds) ? parsed.habitIds : [],
-      notes: parsed.notes,
+function migrateActiveFromLegacy(): ActiveHabitEntry[] | null {
+  // Prefer newest non-empty protocol
+  const keys = collectKeys('lp:protocol:')
+  let best: string[] = []
+  for (const k of keys) {
+    try {
+      const p = JSON.parse(localStorage.getItem(k) ?? '') as WeeklyProtocol
+      if (Array.isArray(p.habitIds) && p.habitIds.length > best.length) {
+        best = p.habitIds
+      }
+    } catch {
+      /* skip */
     }
-  } catch {
-    return { habitIds: [] }
   }
+  if (best.length === 0) return null
+  return best.map((habitId) => ({ habitId, stage: 'forming' as const }))
 }
 
-export function saveProtocol(weekKey: string, protocol: WeeklyProtocol): void {
-  localStorage.setItem(KEY_PROTOCOL(weekKey), JSON.stringify(protocol))
-}
-
-export function loadProgress(weekKey: string): ProgressLog {
-  const raw = localStorage.getItem(KEY_PROGRESS(weekKey))
-  if (!raw) return { completions: {} }
-  try {
-    const parsed = JSON.parse(raw) as ProgressLog
-    return { completions: parsed.completions ?? {} }
-  } catch {
-    return { completions: {} }
+export function getActiveEntries(): ActiveHabitEntry[] {
+  const raw = localStorage.getItem(KEY_ACTIVE_HABITS)
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw) as ActiveHabitEntry[]
+      if (Array.isArray(parsed)) {
+        return parsed.filter(
+          (e) => e && typeof e.habitId === 'string' && (e.stage === 'forming' || e.stage === 'formed'),
+        )
+      }
+    } catch {
+      /* fall through */
+    }
   }
-}
-
-export function saveProgress(weekKey: string, progress: ProgressLog): void {
-  localStorage.setItem(KEY_PROGRESS(weekKey), JSON.stringify(progress))
-}
-
-function collectKeys(prefix: string): string[] {
-  const keys: string[] = []
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i)
-    if (k?.startsWith(prefix)) keys.push(k)
+  const migrated = migrateActiveFromLegacy()
+  if (migrated) {
+    saveActiveEntries(migrated)
+    return migrated
   }
-  return keys
+  return []
+}
+
+export function saveActiveEntries(entries: ActiveHabitEntry[]): void {
+  localStorage.setItem(KEY_ACTIVE_HABITS, JSON.stringify(entries))
+}
+
+export function getActiveHabitIds(): string[] {
+  return getActiveEntries().map((e) => e.habitId)
+}
+
+export function isActive(habitId: string): boolean {
+  return getActiveEntries().some((e) => e.habitId === habitId)
+}
+
+export function addActiveHabit(
+  habitId: string,
+  stage: HabitStage = 'forming',
+): void {
+  const entries = getActiveEntries()
+  if (entries.some((e) => e.habitId === habitId)) return
+  entries.push({ habitId, stage })
+  saveActiveEntries(entries)
+}
+
+export function removeActiveHabit(habitId: string): void {
+  saveActiveEntries(getActiveEntries().filter((e) => e.habitId !== habitId))
+}
+
+export function setHabitStage(habitId: string, stage: HabitStage): void {
+  const entries = getActiveEntries().map((e) =>
+    e.habitId === habitId ? { ...e, stage } : e,
+  )
+  saveActiveEntries(entries)
+}
+
+/** Merge pack habit ids into active as forming (skip already active). */
+export function applyPackToActive(packId: string): number {
+  const pack = getPack(packId)
+  if (!pack) return 0
+  const entries = getActiveEntries()
+  const have = new Set(entries.map((e) => e.habitId))
+  let added = 0
+  for (const id of pack.habitIds) {
+    if (have.has(id)) continue
+    if (!getHabit(id)) continue
+    entries.push({ habitId: id, stage: 'forming' })
+    have.add(id)
+    added++
+  }
+  saveActiveEntries(entries)
+  return added
+}
+
+// ── Day checks ─────────────────────────────────────────────────
+
+export function loadDayChecks(dateKey: string): DayChecks {
+  return loadJson<DayChecks>(KEY_DAY(dateKey), { done: {} })
+}
+
+export function saveDayChecks(dateKey: string, checks: DayChecks): void {
+  localStorage.setItem(KEY_DAY(dateKey), JSON.stringify(checks))
+}
+
+export function setDayDone(
+  dateKey: string,
+  habitId: string,
+  done: boolean,
+): void {
+  const checks = loadDayChecks(dateKey)
+  if (done) checks.done[habitId] = true
+  else delete checks.done[habitId]
+  saveDayChecks(dateKey, checks)
+}
+
+export function isDayDone(dateKey: string, habitId: string): boolean {
+  return !!loadDayChecks(dateKey).done[habitId]
+}
+
+export function loadChecksForDates(
+  dateKeys: string[],
+): Record<string, Record<string, boolean>> {
+  const out: Record<string, Record<string, boolean>> = {}
+  for (const d of dateKeys) {
+    out[d] = loadDayChecks(d).done
+  }
+  return out
+}
+
+// ── Overview week ──────────────────────────────────────────────
+
+export function getOverviewWeek(): string {
+  return (
+    localStorage.getItem(KEY_OVERVIEW_WEEK) ??
+    localStorage.getItem(KEY_LEGACY_WEEK) ??
+    isoWeekKey()
+  )
+}
+
+export function setOverviewWeek(weekKey: string): void {
+  localStorage.setItem(KEY_OVERVIEW_WEEK, weekKey)
 }
 
 // ── Export / import ────────────────────────────────────────────
 
 export function exportAll(): ExportBlob {
+  const dayChecks: Record<string, DayChecks> = {}
+  for (const k of collectKeys('lp:day:')) {
+    const date = k.slice('lp:day:'.length)
+    dayChecks[date] = loadDayChecks(date)
+  }
+
+  // Legacy fields for older backups
   const protocols: Record<string, WeeklyProtocol> = {}
   const progress: Record<string, ProgressLog> = {}
-
   for (const k of collectKeys('lp:protocol:')) {
     const week = k.slice('lp:protocol:'.length)
-    protocols[week] = loadProtocol(week)
+    try {
+      protocols[week] = JSON.parse(localStorage.getItem(k) ?? '{}') as WeeklyProtocol
+    } catch {
+      /* skip */
+    }
   }
   for (const k of collectKeys('lp:progress:')) {
     const week = k.slice('lp:progress:'.length)
-    progress[week] = loadProgress(week)
+    try {
+      progress[week] = JSON.parse(localStorage.getItem(k) ?? '{}') as ProgressLog
+    } catch {
+      /* skip */
+    }
   }
 
   return {
     version: 1,
     exportedAt: new Date().toISOString(),
-    activeWeek: getActiveWeek(),
+    activeWeek: getOverviewWeek(),
+    overviewWeek: getOverviewWeek(),
     protocols,
     progress,
     customHabits: getCustomHabits(),
     habitOverrides: getHabitOverrides(),
     customPacks: getCustomPacks(),
+    activeHabits: getActiveEntries(),
+    dayChecks,
   }
 }
 
 export function importAll(blob: ExportBlob): void {
   if (blob.version !== 1) throw new Error('Unsupported export version')
-  if (blob.activeWeek) setActiveWeek(blob.activeWeek)
-  for (const [week, protocol] of Object.entries(blob.protocols ?? {})) {
-    saveProtocol(week, protocol)
-  }
-  for (const [week, prog] of Object.entries(blob.progress ?? {})) {
-    saveProgress(week, prog)
-  }
+
   if (blob.customHabits) saveCustomHabits(blob.customHabits)
   if (blob.habitOverrides) saveHabitOverrides(blob.habitOverrides)
   if (blob.customPacks) {
     saveCustomPacks(blob.customPacks.map((p) => ({ ...p, custom: true })))
   }
+
+  if (blob.activeHabits && Array.isArray(blob.activeHabits)) {
+    saveActiveEntries(blob.activeHabits)
+  } else if (blob.protocols) {
+    // Migrate from weekly protocol export
+    let best: string[] = []
+    for (const p of Object.values(blob.protocols)) {
+      if (p.habitIds?.length > best.length) best = p.habitIds
+    }
+    if (best.length) {
+      saveActiveEntries(best.map((habitId) => ({ habitId, stage: 'forming' })))
+    }
+  }
+
+  if (blob.dayChecks) {
+    for (const [date, checks] of Object.entries(blob.dayChecks)) {
+      saveDayChecks(date, checks)
+    }
+  }
+
+  // Legacy week progress → approximate day checks not available; keep protocols for history
+  if (blob.protocols) {
+    for (const [week, protocol] of Object.entries(blob.protocols)) {
+      localStorage.setItem(KEY_PROTOCOL(week), JSON.stringify(protocol))
+    }
+  }
+  if (blob.progress) {
+    for (const [week, prog] of Object.entries(blob.progress)) {
+      localStorage.setItem(KEY_PROGRESS(week), JSON.stringify(prog))
+    }
+  }
+
+  const week = blob.overviewWeek ?? blob.activeWeek
+  if (week) setOverviewWeek(week)
 }
 
 export function downloadExport(): void {
@@ -282,9 +404,7 @@ export function downloadExport(): void {
   )
   const a = document.createElement('a')
   a.href = url
-  a.download = `life-protocols-export-${blob.activeWeek}.json`
+  a.download = `life-protocols-export-${blob.overviewWeek ?? 'data'}.json`
   a.click()
   URL.revokeObjectURL(url)
 }
-
-

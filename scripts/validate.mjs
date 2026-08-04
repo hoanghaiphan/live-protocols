@@ -16,9 +16,10 @@ const CATEGORIES = [
   'creativity',
 ]
 const FREQUENCIES = ['daily', 'several_per_week', 'weekly']
-const WEEKLY_TARGETS = { daily: 5, several_per_week: 3, weekly: 1 }
+const WEEKLY_TARGETS = { daily: 7, several_per_week: 3, weekly: 1 }
 const FREQ_MULTIPLIER = { daily: 1.0, several_per_week: 0.6, weekly: 0.35 }
-const RADAR_REFERENCE = 6
+const RADAR_REFERENCE = 4
+const RADAR_MAX = 5
 
 let failed = 0
 
@@ -47,7 +48,8 @@ function categoryScores(habits) {
   const weights = Object.fromEntries(CATEGORIES.map((c) => [c, 0]))
   for (const h of habits) weights[h.category] += habitWeight(h)
   const scores = {}
-  for (const c of CATEGORIES) scores[c] = Math.min(10, weights[c] / RADAR_REFERENCE)
+  for (const c of CATEGORIES)
+    scores[c] = Math.min(RADAR_MAX, weights[c] / RADAR_REFERENCE)
   return scores
 }
 
@@ -130,21 +132,36 @@ const weekly = { ...sample, id: 't-weekly', frequency: 'weekly', category: 'fina
 assert(Math.abs(habitWeight(weekly) - 6 * 0.35) < 1e-9, 'weekly weight uses 0.35 mult')
 
 const scores = categoryScores([sample, weekly])
-assert(scores.health === Math.min(10, 6 / 6), 'health axis from daily habit')
-assert(scores.finance === Math.min(10, (6 * 0.35) / 6), 'finance axis from weekly habit')
-assert(scores.intelligence === 0, 'empty axis is 0')
-
-const pct = consistencyPercent(
-  [sample, weekly],
-  { 't-daily': 5, 't-weekly': 1 },
+assert(scores.health === Math.min(RADAR_MAX, 6 / RADAR_REFERENCE), 'health axis from daily habit')
+assert(
+  scores.finance === Math.min(RADAR_MAX, (6 * 0.35) / RADAR_REFERENCE),
+  'finance axis from weekly habit',
 )
-assert(pct === 100, 'full completion is 100%')
+assert(scores.intelligence === 0, 'empty axis is 0')
+assert(RADAR_MAX === 5, 'radar max is 5')
 
-const partial = consistencyPercent([sample], { 't-daily': 2 })
-assert(partial === 40, '2/5 daily hits is 40%')
-
-const over = consistencyPercent([sample], { 't-daily': 99 })
-assert(over === 100, 'over-completion caps at target for %')
+// day-check style consistency: 7/7 and 1/1
+function weekConsistency(habits, checksByDate, dateKeys) {
+  let done = 0
+  let target = 0
+  for (const h of habits) {
+    const t = WEEKLY_TARGETS[h.frequency]
+    target += t
+    let hits = 0
+    for (const d of dateKeys) if (checksByDate[d]?.[h.id]) hits++
+    done += Math.min(hits, t)
+  }
+  return Math.round((done / target) * 100)
+}
+const dates = ['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7']
+const fullChecks = Object.fromEntries(
+  dates.map((d) => [d, { 't-daily': true, 't-weekly': d === 'd1' }]),
+)
+assert(weekConsistency([sample, weekly], fullChecks, dates) === 100, 'full week checks 100%')
+const partialChecks = Object.fromEntries(
+  dates.map((d, i) => [d, i < 2 ? { 't-daily': true } : {}]),
+)
+assert(weekConsistency([sample], partialChecks, dates) === Math.round((2 / 7) * 100), '2/7 daily is ~29%')
 
 if (failed > 0) {
   console.error(`\n${failed} assertion(s) failed`)

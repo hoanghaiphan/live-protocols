@@ -2,61 +2,131 @@
   {
     "id": "balance-reset",
     "name": "Balance Reset",
-    "description": "Even coverage across all six categories at a sustainable load for a demanding week.",
+    "description": "Even coverage across six categories at a sustainable load.",
     "habitIds": [
       "health-sleep-window",
       "health-mobility-block",
       "intel-deep-work",
       "career-top3-force-rank",
       "fin-weekly-money-review",
-      "create-nonjob-practice",
-      "social-relationship-crm",
-      "career-ship-weekly"
+      "create-nonjob-practice"
     ]
   },
   {
     "id": "network-expansion",
     "name": "Network Expansion",
-    "description": "Social-heavy week without zeroing health or basic execution hygiene.",
+    "description": "Outbound connection without zeroing health basics.",
     "habitIds": [
       "social-high-leverage-outreach",
+      "social-open-conversation",
       "social-1on1-outside-team",
       "social-relationship-crm",
-      "social-followup-discipline",
-      "social-host-or-contribute",
-      "health-sleep-window",
-      "career-top3-force-rank",
-      "create-make-for-someone"
+      "social-ask-for-help",
+      "health-sleep-window"
     ]
   },
   {
     "id": "deep-work-recovery",
     "name": "Deep Work + Recovery",
-    "description": "Maximum cognitive output paired with recovery so you don’t burn out mid-sprint.",
+    "description": "Cognitive output paired with sleep and recovery.",
     "habitIds": [
       "intel-deep-work",
       "intel-deliberate-practice",
-      "intel-write-to-clarify",
       "health-sleep-window",
+      "health-off-before-eleven",
       "health-zone2-recovery",
-      "health-evening-cutoff",
-      "health-autoreg-check",
       "create-unoptimized-play"
     ]
   },
   {
     "id": "career-capital",
     "name": "Career Capital",
-    "description": "Visibility, feedback, and optionality—compound career assets outside pure task execution.",
+    "description": "Visibility, feedback, and optionality.",
     "habitIds": [
       "career-ship-weekly",
       "career-capital-artifact",
       "career-feedback-loop",
-      "career-stakeholder-batch",
+      "career-ask-how-better",
       "intel-technical-reading",
-      "fin-compensation-hygiene",
-      "social-high-leverage-outreach",
-      "create-side-project-hour"
+      "social-high-leverage-outreach"
+    ]
+  },
+  {
+    "id": "morning-foundation",
+    "name": "Morning Foundation",
+    "description": "Sleep, environment, and a clean daily start.",
+    "habitIds": [
+      "health-off-before-eleven",
+      "health-sleep-window",
+      "health-room-one-percent",
+      "career-top3-force-rank",
+      "health-mobility-block",
+      "intel-reflect-write"
+    ]
+  },
+  {
+    "id": "evening-review",
+    "name": "Evening Review",
+    "description": "Close the day: learning, standards, mood, shutdown.",
+    "habitIds": [
+      "intel-categorize-daily-learning",
+      "career-missed-standards-review",
+      "social-happiness-from-help",
+      "intel-reflect-write",
+      "health-off-before-eleven",
+      "health-evening-cutoff"
+    ]
+  },
+  {
+    "id": "people-first",
+    "name": "People First",
+    "description": "Care, help, conversation, and honest connection.",
+    "habitIds": [
+      "social-love-with-care",
+      "social-open-conversation",
+      "social-ask-for-help",
+      "social-followup-discipline",
+      "create-jokes-and-stories",
+      "create-make-for-someone"
+    ]
+  },
+  {
+    "id": "independent-thinker",
+    "name": "Independent Thinker",
+    "description": "Hypothesis, writing, deliberate practice, feedback.",
+    "habitIds": [
+      "intel-hypothesis-validate",
+      "intel-reflect-write",
+      "intel-deliberate-practice",
+      "intel-write-to-clarify",
+      "career-ask-how-better",
+      "career-drivers-mindset"
+    ]
+  },
+  {
+    "id": "life-ops-sprint",
+    "name": "Life Ops Sprint",
+    "description": "Obvious problems, room upgrades, money hygiene.",
+    "habitIds": [
+      "career-obvious-problems",
+      "health-room-one-percent",
+      "fin-weekly-money-review",
+      "fin-admin-batch",
+      "fin-spend-audit-slice",
+      "career-drivers-mindset"
+    ]
+  },
+  {
+    "id": "creative-charge",
+    "name": "Creative Charge",
+    "description": "Play, stories, side project, novel input.",
+    "habitIds": [
+      "create-nonjob-practice",
+      "create-jokes-and-stories",
+      "create-side-project-hour",
+      "create-novel-input",
+      "create-unoptimized-play",
+      "create-make-for-someone"
     ]
   }
 ]
