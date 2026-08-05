@@ -72,6 +72,12 @@ const packs = loadJson('data/packs.json')
 
 assert(Array.isArray(habits) && habits.length >= 30, `at least 30 core habits (got ${habits.length})`)
 assert(Array.isArray(packs) && packs.length >= 4, 'at least 4 packs')
+for (const p of packs) {
+  assert(
+    Array.isArray(p.habitIds) && p.habitIds.length === 6,
+    `pack ${p.id} has exactly 6 habits (got ${p.habitIds?.length})`,
+  )
+}
 
 const ids = new Set()
 const catCount = Object.fromEntries(CATEGORIES.map((c) => [c, 0]))

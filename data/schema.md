@@ -35,7 +35,7 @@
 
 | Key | Value |
 |-----|--------|
-| `lp:activeHabits` | `{ habitId, stage: "forming"\|"formed" }[]` sticky set |
+| `lp:activeHabits` | `{ habitId, stage, weeklyTarget? }[]` sticky set; `weeklyTarget` 1–7 optional |
 | `lp:day:YYYY-MM-DD` | `{ done: { [habitId]: true } }` day checkboxes |
 | `lp:overviewWeek` | ISO week for table / overview navigation |
 | `lp:customHabits` | `Habit[]` user-created (`source: local`) |

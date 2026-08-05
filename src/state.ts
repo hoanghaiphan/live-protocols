@@ -8,6 +8,11 @@ import type {
   ProgressLog,
   WeeklyProtocol,
 } from './types'
+import {
+  WEEKLY_TARGET_MAX,
+  WEEKLY_TARGET_MIN,
+} from './types'
+import { resolveWeeklyTarget, weeklyTarget as defaultWeeklyTarget } from './scoring'
 import { isoWeekKey } from './weeks'
 import habitsJson from '../data/habits.json'
 import packsJson from '../data/packs.json'
@@ -186,15 +191,28 @@ function migrateActiveFromLegacy(): ActiveHabitEntry[] | null {
   return best.map((habitId) => ({ habitId, stage: 'forming' as const }))
 }
 
+function normalizeEntry(e: ActiveHabitEntry): ActiveHabitEntry | null {
+  if (!e || typeof e.habitId !== 'string') return null
+  if (e.stage !== 'forming' && e.stage !== 'formed') return null
+  const out: ActiveHabitEntry = { habitId: e.habitId, stage: e.stage }
+  if (typeof e.weeklyTarget === 'number' && Number.isFinite(e.weeklyTarget)) {
+    out.weeklyTarget = Math.min(
+      WEEKLY_TARGET_MAX,
+      Math.max(WEEKLY_TARGET_MIN, Math.round(e.weeklyTarget)),
+    )
+  }
+  return out
+}
+
 export function getActiveEntries(): ActiveHabitEntry[] {
   const raw = localStorage.getItem(KEY_ACTIVE_HABITS)
   if (raw) {
     try {
       const parsed = JSON.parse(raw) as ActiveHabitEntry[]
       if (Array.isArray(parsed)) {
-        return parsed.filter(
-          (e) => e && typeof e.habitId === 'string' && (e.stage === 'forming' || e.stage === 'formed'),
-        )
+        return parsed
+          .map(normalizeEntry)
+          .filter((e): e is ActiveHabitEntry => !!e)
       }
     } catch {
       /* fall through */
@@ -226,7 +244,12 @@ export function addActiveHabit(
 ): void {
   const entries = getActiveEntries()
   if (entries.some((e) => e.habitId === habitId)) return
-  entries.push({ habitId, stage })
+  const habit = getHabit(habitId)
+  entries.push({
+    habitId,
+    stage,
+    weeklyTarget: habit ? defaultWeeklyTarget(habit) : 3,
+  })
   saveActiveEntries(entries)
 }
 
@@ -241,6 +264,62 @@ export function setHabitStage(habitId: string, stage: HabitStage): void {
   saveActiveEntries(entries)
 }
 
+export function getEntryWeeklyTarget(entry: ActiveHabitEntry): number {
+  const habit = getHabit(entry.habitId)
+  if (!habit) return entry.weeklyTarget ?? 3
+  return resolveWeeklyTarget(habit, entry.weeklyTarget)
+}
+
+export function setActiveWeeklyTarget(habitId: string, target: number): void {
+  const n = Math.min(
+    WEEKLY_TARGET_MAX,
+    Math.max(WEEKLY_TARGET_MIN, Math.round(target)),
+  )
+  const entries = getActiveEntries().map((e) =>
+    e.habitId === habitId ? { ...e, weeklyTarget: n } : e,
+  )
+  saveActiveEntries(entries)
+}
+
+export function bumpActiveWeeklyTarget(habitId: string, delta: number): void {
+  const entry = getActiveEntries().find((e) => e.habitId === habitId)
+  if (!entry) return
+  const cur = getEntryWeeklyTarget(entry)
+  setActiveWeeklyTarget(habitId, cur + delta)
+}
+
+/**
+ * Log +1 hit for the week: mark today done if not already.
+ * Returns whether state changed.
+ */
+export function logHitToday(habitId: string, todayKey: string): boolean {
+  if (isDayDone(todayKey, habitId)) return false
+  setDayDone(todayKey, habitId, true)
+  return true
+}
+
+/**
+ * Undo a hit: clear today if set; else clear the latest done day in dateKeys.
+ */
+export function undoHitInWeek(
+  habitId: string,
+  todayKey: string,
+  dateKeys: string[],
+): boolean {
+  if (isDayDone(todayKey, habitId)) {
+    setDayDone(todayKey, habitId, false)
+    return true
+  }
+  for (let i = dateKeys.length - 1; i >= 0; i--) {
+    const d = dateKeys[i]
+    if (isDayDone(d, habitId)) {
+      setDayDone(d, habitId, false)
+      return true
+    }
+  }
+  return false
+}
+
 /** Merge pack habit ids into active as forming (skip already active). */
 export function applyPackToActive(packId: string): number {
   const pack = getPack(packId)
@@ -251,7 +330,12 @@ export function applyPackToActive(packId: string): number {
   for (const id of pack.habitIds) {
     if (have.has(id)) continue
     if (!getHabit(id)) continue
-    entries.push({ habitId: id, stage: 'forming' })
+    const habit = getHabit(id)!
+    entries.push({
+      habitId: id,
+      stage: 'forming',
+      weeklyTarget: defaultWeeklyTarget(habit),
+    })
     have.add(id)
     added++
   }

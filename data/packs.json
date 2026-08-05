@@ -2,90 +2,90 @@
   {
     "id": "balance-reset",
     "name": "Balance Reset",
-    "description": "Even coverage across six categories at a sustainable load.",
+    "description": "Six habits spanning categories — merge into active, then drop what you do not want.",
     "habitIds": [
       "health-sleep-window",
-      "health-mobility-block",
       "intel-deep-work",
-      "career-top3-force-rank",
+      "social-open-conversation",
       "fin-weekly-money-review",
+      "career-top3-force-rank",
       "create-nonjob-practice"
     ]
   },
   {
     "id": "network-expansion",
     "name": "Network Expansion",
-    "description": "Outbound connection without zeroing health basics.",
+    "description": "Add social volume; remove any you already do well.",
     "habitIds": [
       "social-high-leverage-outreach",
       "social-open-conversation",
       "social-1on1-outside-team",
       "social-relationship-crm",
       "social-ask-for-help",
-      "health-sleep-window"
+      "social-followup-discipline"
     ]
   },
   {
     "id": "deep-work-recovery",
     "name": "Deep Work + Recovery",
-    "description": "Cognitive output paired with sleep and recovery.",
+    "description": "Output plus sleep/recovery guardrails.",
     "habitIds": [
       "intel-deep-work",
-      "intel-deliberate-practice",
+      "hub-focus-ultradian",
       "health-sleep-window",
       "health-off-before-eleven",
-      "health-zone2-recovery",
+      "hub-nsdr",
       "create-unoptimized-play"
     ]
   },
   {
     "id": "career-capital",
     "name": "Career Capital",
-    "description": "Visibility, feedback, and optionality.",
+    "description": "Ship, feedback, optionality — six career levers.",
     "habitIds": [
       "career-ship-weekly",
       "career-capital-artifact",
       "career-feedback-loop",
       "career-ask-how-better",
-      "intel-technical-reading",
+      "career-stakeholder-batch",
       "social-high-leverage-outreach"
     ]
   },
   {
     "id": "morning-foundation",
     "name": "Morning Foundation",
-    "description": "Sleep, environment, and a clean daily start.",
+    "description": "Wake block: light, movement, no-phone, plan.",
     "habitIds": [
-      "health-off-before-eleven",
-      "health-sleep-window",
-      "health-room-one-percent",
+      "hub-morning-sunlight",
+      "hub-alertness-walk",
+      "hub-phone-morning",
+      "hub-delay-caffeine",
       "career-top3-force-rank",
-      "health-mobility-block",
-      "intel-reflect-write"
+      "health-room-one-percent"
     ]
   },
   {
     "id": "evening-review",
     "name": "Evening Review",
-    "description": "Close the day: learning, standards, mood, shutdown.",
+    "description": "Close the day: learning, standards, dim light, off time.",
     "habitIds": [
       "intel-categorize-daily-learning",
       "career-missed-standards-review",
       "social-happiness-from-help",
       "intel-reflect-write",
-      "health-off-before-eleven",
-      "health-evening-cutoff"
+      "hub-evening-dim",
+      "health-off-before-eleven"
     ]
   },
   {
     "id": "people-first",
     "name": "People First",
-    "description": "Care, help, conversation, and honest connection.",
+    "description": "Connection, care, help, humor — social stack of six.",
     "habitIds": [
       "social-love-with-care",
+      "hub-social-connection",
       "social-open-conversation",
       "social-ask-for-help",
-      "social-followup-discipline",
       "create-jokes-and-stories",
       "create-make-for-someone"
     ]
@@ -93,12 +93,12 @@
   {
     "id": "independent-thinker",
     "name": "Independent Thinker",
-    "description": "Hypothesis, writing, deliberate practice, feedback.",
+    "description": "Hypothesis, writing, practice, rest after learn.",
     "habitIds": [
       "intel-hypothesis-validate",
       "intel-reflect-write",
       "intel-deliberate-practice",
-      "intel-write-to-clarify",
+      "hub-learn-then-rest",
       "career-ask-how-better",
       "career-drivers-mindset"
     ]
@@ -106,20 +106,20 @@
   {
     "id": "life-ops-sprint",
     "name": "Life Ops Sprint",
-    "description": "Obvious problems, room upgrades, money hygiene.",
+    "description": "Obvious problems, room, money admin — six ops habits.",
     "habitIds": [
       "career-obvious-problems",
       "health-room-one-percent",
       "fin-weekly-money-review",
       "fin-admin-batch",
       "fin-spend-audit-slice",
-      "career-drivers-mindset"
+      "fin-surplus-rule"
     ]
   },
   {
     "id": "creative-charge",
     "name": "Creative Charge",
-    "description": "Play, stories, side project, novel input.",
+    "description": "Play and make — six creativity habits.",
     "habitIds": [
       "create-nonjob-practice",
       "create-jokes-and-stories",
@@ -127,6 +127,84 @@
       "create-novel-input",
       "create-unoptimized-play",
       "create-make-for-someone"
+    ]
+  },
+  {
+    "id": "huberman-foundations",
+    "name": "Huberman Foundations",
+    "description": "Core Huberman stack: light, sleep timing, caffeine delay, breath, walk, phone delay. Add then prune.",
+    "habitIds": [
+      "hub-morning-sunlight",
+      "hub-sleep-consistency",
+      "hub-delay-caffeine",
+      "hub-physiological-sigh",
+      "hub-post-meal-walk",
+      "hub-phone-morning"
+    ]
+  },
+  {
+    "id": "huberman-sleep",
+    "name": "Huberman Sleep",
+    "description": "Sleep-first Huberman protocols — six items; remove any already covered.",
+    "habitIds": [
+      "hub-morning-sunlight",
+      "hub-sleep-consistency",
+      "hub-evening-dim",
+      "health-off-before-eleven",
+      "hub-nsdr",
+      "hub-delay-caffeine"
+    ]
+  },
+  {
+    "id": "huberman-focus",
+    "name": "Huberman Focus",
+    "description": "Deep work, no morning phone, learn+rest, NSDR, light, vision breaks.",
+    "habitIds": [
+      "hub-focus-ultradian",
+      "hub-phone-morning",
+      "hub-learn-then-rest",
+      "hub-nsdr",
+      "hub-morning-sunlight",
+      "hub-view-distance"
+    ]
+  },
+  {
+    "id": "huberman-fitness",
+    "name": "Huberman Fitness",
+    "description": "Zone 2, strength, walk, cold, heat, morning move — dose and drop what you already train.",
+    "habitIds": [
+      "hub-zone2",
+      "hub-resistance",
+      "hub-post-meal-walk",
+      "hub-cold-exposure",
+      "hub-sauna-heat",
+      "hub-alertness-walk"
+    ]
+  },
+  {
+    "id": "huberman-stress",
+    "name": "Huberman Stress Tools",
+    "description": "Acute and daily stress tools: sighs, cyclic breathing, NSDR, cold, light, dim evening.",
+    "habitIds": [
+      "hub-physiological-sigh",
+      "hub-scripted-breathing",
+      "hub-nsdr",
+      "hub-cold-exposure",
+      "hub-morning-sunlight",
+      "hub-evening-dim"
+    ]
+  },
+  {
+    "id": "huberman-social",
+    "name": "Huberman + Social",
+    "description": "Connection as biology plus practical network habits — six to merge and trim.",
+    "habitIds": [
+      "hub-social-connection",
+      "social-open-conversation",
+      "social-love-with-care",
+      "social-ask-for-help",
+      "social-relationship-crm",
+      "hub-post-meal-walk"
     ]
   }
 ]

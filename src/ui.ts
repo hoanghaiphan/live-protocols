@@ -1,10 +1,12 @@
 import {
   addActiveHabit,
   applyPackToActive,
+  bumpActiveWeeklyTarget,
   deleteHabit,
   deletePack,
   downloadExport,
   getActiveEntries,
+  getEntryWeeklyTarget,
   getHabit,
   getHabits,
   getHabitsByIds,
@@ -15,14 +17,14 @@ import {
   isActive,
   isCoreHabit,
   isCustomHabit,
-  isDayDone,
   loadChecksForDates,
+  logHitToday,
   removeActiveHabit,
   saveHabit,
   savePack,
-  setDayDone,
   setHabitStage,
   setOverviewWeek,
+  undoHitInWeek,
 } from './state'
 import type {
   ActiveHabitEntry,
@@ -30,7 +32,6 @@ import type {
   ExportBlob,
   Frequency,
   Habit,
-  HabitStage,
   Pack,
 } from './types'
 import {
@@ -45,11 +46,10 @@ import {
 } from './types'
 import {
   categoryScores,
+  countHitsInWeek,
   RADAR_MAX,
-  TIME_WARN_MINUTES,
   weakestCategory,
   weekConsistencyPercent,
-  weeklyTimeEstimate,
 } from './scoring'
 import { renderRadarSvg } from './radar'
 import {
@@ -71,8 +71,6 @@ type ModalState =
 
 let modal: ModalState = null
 let escapeHandler: ((e: KeyboardEvent) => void) | null = null
-
-const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 function esc(s: string): string {
   return s
@@ -105,6 +103,12 @@ function catStyle(category: Category): string {
 
 function catBorder(category: Category): string {
   return `border-left: 3px solid ${CATEGORY_COLORS[category]}`
+}
+
+function cadenceTag(freq: Frequency): string {
+  if (freq === 'daily') return 'D'
+  if (freq === 'several_per_week') return '3×'
+  return 'W'
 }
 
 function uniqueHabitId(name: string): string {
@@ -154,14 +158,27 @@ function todayKey(): string {
   return dateKeyLocal(new Date())
 }
 
-// ── Header ─────────────────────────────────────────────────────
+function orderedActiveEntries(): ActiveHabitEntry[] {
+  const entries = getActiveEntries()
+  const forming = entries.filter((e) => e.stage === 'forming')
+  const formed = entries.filter((e) => e.stage === 'formed')
+  return [...forming, ...formed]
+}
+
+function targetMap(entries: ActiveHabitEntry[]): Record<string, number> {
+  const map: Record<string, number> = {}
+  for (const e of entries) map[e.habitId] = getEntryWeeklyTarget(e)
+  return map
+}
+
+// ── Header / packs / radar ─────────────────────────────────────
 
 function renderHeader(): string {
   return `
     <header class="header">
       <div class="brand">
         <h1>Life Protocols</h1>
-        <p>Active habits · balance · daily check-ins</p>
+        <p>Active plan · daily hits · balance</p>
       </div>
       <div class="header-actions">
         <button type="button" data-action="export">Export</button>
@@ -172,192 +189,160 @@ function renderHeader(): string {
   `
 }
 
-// ── Packs dropdown + radar ─────────────────────────────────────
-
 function renderPacksBar(): string {
   const packs = getPacks()
   const options = packs
     .map(
       (p) =>
-        `<option value="${esc(p.id)}">${esc(p.name)}${p.custom ? ' (custom)' : ''} — ${p.habitIds.length}</option>`,
+        `<option value="${esc(p.id)}">${esc(p.name)} (${p.habitIds.length})${p.custom ? ' · custom' : ''}</option>`,
     )
     .join('')
   return `
     <div class="packs-bar">
       <label class="packs-select-wrap">
-        <span class="field-label">Packs</span>
-        <select id="pack-select" aria-label="Starter packs">
-          <option value="">Choose a pack…</option>
+        <span class="field-label">Pack</span>
+        <select id="pack-select" aria-label="Habit packs">
+          <option value="">Add pack to active…</option>
           ${options}
         </select>
       </label>
       <button type="button" class="primary" data-action="apply-pack-select">Add to active</button>
-      <button type="button" class="ghost" data-action="new-pack">+ Custom pack</button>
-      <button type="button" class="ghost" data-action="manage-pack" title="Edit selected custom pack">Edit pack</button>
+      <button type="button" class="ghost" data-action="new-pack">+ Pack</button>
+      <button type="button" class="ghost" data-action="manage-pack">Edit pack</button>
     </div>
-    <p class="panel-hint packs-hint">Packs add missing habits as <strong>forming</strong> (does not remove your current active set).</p>
   `
 }
 
-function renderRadarPanel(selected: Habit[]): string {
+function renderRadarStrip(selected: Habit[]): string {
   const scores = categoryScores(selected)
   const weak = weakestCategory(scores)
-  const time = weeklyTimeEstimate(selected)
-  const timeLabel = formatMinutes(time)
-  const warn =
-    time > TIME_WARN_MINUTES
-      ? `<div class="time-warn">Heavy load: ~${timeLabel}/week estimated</div>`
-      : ''
   const weakColor = weak ? CATEGORY_COLORS[weak] : undefined
-
   return `
-    <section class="panel radar-panel">
-      <h2>Balance radar <span class="muted-inline">(max ${RADAR_MAX})</span></h2>
-      <div class="radar-wrap">
-        ${renderRadarSvg({ scores })}
-        <div class="radar-meta">
-          ${
-            selected.length === 0
-              ? 'Add active habits or apply a pack'
-              : weak
-                ? `Weakest: <strong style="color:${weakColor}">${esc(CATEGORY_LABELS[weak])}</strong> · ${selected.length} active · ~${timeLabel}/week`
-                : `${selected.length} active · ~${timeLabel}/week`
-          }
+    <section class="panel radar-strip">
+      <div class="radar-strip-inner">
+        <div class="radar-compact">${renderRadarSvg({ scores, width: 260, height: 240 })}</div>
+        <div class="radar-side">
+          <h2>Balance <span class="muted-inline">max ${RADAR_MAX}</span></h2>
+          <p class="radar-meta">
+            ${
+              selected.length === 0
+                ? 'Activate habits or add a pack'
+                : weak
+                  ? `Weakest: <strong style="color:${weakColor}">${esc(CATEGORY_LABELS[weak])}</strong> · ${selected.length} active`
+                  : `${selected.length} active`
+            }
+          </p>
         </div>
-        ${warn}
       </div>
     </section>
   `
 }
 
-// ── Active habits table ────────────────────────────────────────
+// ── Plan grid ──────────────────────────────────────────────────
 
-function renderDayCells(
-  habitId: string,
-  dateKeys: string[],
-  today: string,
+function renderPlanCell(
+  entry: ActiveHabitEntry,
+  hits: number,
+  target: number,
 ): string {
-  return dateKeys
-    .map((dk, i) => {
-      const checked = isDayDone(dk, habitId)
-      const isToday = dk === today
-      return `
-        <td class="day-cell ${isToday ? 'is-today' : ''}">
-          <label class="check-day" title="${esc(DAY_LABELS[i])} ${esc(dk)}">
-            <input type="checkbox" data-action="toggle-day" data-habit-id="${esc(habitId)}" data-date="${esc(dk)}" ${checked ? 'checked' : ''} />
-          </label>
-        </td>`
-    })
-    .join('')
-}
-
-function renderActiveTableSection(
-  title: string,
-  stage: HabitStage,
-  entries: ActiveHabitEntry[],
-  dateKeys: string[],
-  today: string,
-  hint: string,
-): string {
-  const rows =
-    entries.length === 0
-      ? `<tr><td colspan="11" class="empty-row">${esc(hint)}</td></tr>`
-      : entries
-          .map((e) => {
-            const h = getHabit(e.habitId)
-            if (!h) return ''
-            return `
-              <tr class="active-row" style="${catBorder(h.category)}" data-habit-id="${esc(h.id)}">
-                <td class="col-name">
-                  <button type="button" class="linkish" data-action="view-habit" data-habit-id="${esc(h.id)}">${esc(h.name)}</button>
-                </td>
-                <td class="col-cat"><span class="cat-badge" style="${catStyle(h.category)}">${esc(CATEGORY_LABELS[h.category])}</span></td>
-                <td class="col-freq muted-cell">${esc(FREQUENCY_LABELS[h.frequency])}</td>
-                ${renderDayCells(h.id, dateKeys, today)}
-                <td class="col-actions">
-                  ${
-                    stage === 'forming'
-                      ? `<button type="button" class="ghost tiny" data-action="mark-formed" data-habit-id="${esc(h.id)}" title="Mark as formed">Formed ✓</button>`
-                      : `<button type="button" class="ghost tiny" data-action="mark-forming" data-habit-id="${esc(h.id)}" title="Move back to forming">Forming</button>`
-                  }
-                  <button type="button" class="ghost tiny danger-text" data-action="deactivate" data-habit-id="${esc(h.id)}" title="Remove from active">✕</button>
-                </td>
-              </tr>`
-          })
-          .join('')
-
-  const formingNote =
-    stage === 'forming' && entries.length > FORMING_SOFT_MAX
-      ? `<p class="time-warn">You have ${entries.length} forming habits — aim for about ${FORMING_SOFT_MAX}.</p>`
-      : stage === 'forming'
-        ? `<p class="panel-hint">${entries.length} / ~${FORMING_SOFT_MAX} suggested</p>`
-        : ''
+  const h = getHabit(entry.habitId)
+  if (!h) return ''
+  const fill = target > 0 ? Math.min(100, Math.round((hits / target) * 100)) : 0
+  const color = CATEGORY_COLORS[h.category]
+  const timeLabel =
+    h.timeEstimateMinutes <= 0
+      ? 'rule'
+      : `~${formatMinutes(h.timeEstimateMinutes)}`
+  const stageClass = entry.stage === 'forming' ? 'is-forming' : 'is-formed'
+  const doneClass = fill >= 100 ? 'is-complete' : ''
 
   return `
-    <div class="table-section">
-      <div class="table-section-head">
-        <h3>${esc(title)} <span class="count-pill" style="--pill:${stage === 'forming' ? '#e0a458' : 'var(--accent)'}">${entries.length}</span></h3>
-        ${formingNote}
+    <article class="plan-cell ${stageClass} ${doneClass}" style="--cat:${color}; border-color:${color}55" data-habit-id="${esc(h.id)}">
+      <div class="plan-cell-fill" style="height:${fill}%; background:${color}"></div>
+      <div class="plan-cell-body">
+        <div class="plan-cell-top">
+          <span class="plan-hits" title="Hits this week / weekly target">${hits}/${target}</span>
+          <span class="stage-chip ${stageClass}">${entry.stage === 'forming' ? 'forming' : 'formed'}</span>
+        </div>
+        <button type="button" class="plan-name linkish" data-action="view-habit" data-habit-id="${esc(h.id)}" title="Why & How">${esc(h.name)}</button>
+        <div class="plan-meta">
+          <span class="plan-time" title="Session time estimate">${esc(timeLabel)}</span>
+          <span class="plan-cadence" title="${esc(FREQUENCY_LABELS[h.frequency])}">${cadenceTag(h.frequency)}</span>
+        </div>
+        <div class="plan-controls">
+          <div class="ctrl-group" title="Log hits">
+            <button type="button" class="icon tiny" data-action="hit-minus" data-habit-id="${esc(h.id)}" aria-label="Undo hit">−</button>
+            <button type="button" class="icon tiny" data-action="hit-plus" data-habit-id="${esc(h.id)}" aria-label="Log hit today">+</button>
+          </div>
+          <div class="ctrl-group" title="Weekly target">
+            <button type="button" class="icon tiny" data-action="tgt-minus" data-habit-id="${esc(h.id)}" aria-label="Lower weekly target">tgt−</button>
+            <button type="button" class="icon tiny" data-action="tgt-plus" data-habit-id="${esc(h.id)}" aria-label="Raise weekly target">tgt+</button>
+          </div>
+          <div class="ctrl-group plan-manage">
+            ${
+              entry.stage === 'forming'
+                ? `<button type="button" class="ghost tiny" data-action="mark-formed" data-habit-id="${esc(h.id)}">✓</button>`
+                : `<button type="button" class="ghost tiny" data-action="mark-forming" data-habit-id="${esc(h.id)}">↻</button>`
+            }
+            <button type="button" class="ghost tiny danger-text" data-action="deactivate" data-habit-id="${esc(h.id)}" aria-label="Remove">✕</button>
+          </div>
+        </div>
       </div>
-      <div class="table-scroll">
-        <table class="active-table">
-          <thead>
-            <tr>
-              <th class="col-name">Habit</th>
-              <th class="col-cat">Category</th>
-              <th class="col-freq">Freq</th>
-              ${DAY_LABELS.map((d, i) => `<th class="day-head ${dateKeys[i] === today ? 'is-today' : ''}">${d}</th>`).join('')}
-              <th class="col-actions"></th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    </div>
+    </article>
   `
 }
 
-function renderActiveHabits(weekKey: string): string {
-  const entries = getActiveEntries()
-  const formed = entries.filter((e) => e.stage === 'formed')
-  const forming = entries.filter((e) => e.stage === 'forming')
+function renderActivePlan(weekKey: string): string {
+  const entries = orderedActiveEntries()
+  const formingN = entries.filter((e) => e.stage === 'forming').length
+  const formedN = entries.filter((e) => e.stage === 'formed').length
   const dateKeys = weekDateKeys(weekKey)
-  const today = todayKey()
-  const habits = getHabitsByIds(entries.map((e) => e.habitId))
   const checks = loadChecksForDates(dateKeys)
-  const pct = weekConsistencyPercent(habits, checks, dateKeys)
+  const habits = getHabitsByIds(entries.map((e) => e.habitId))
+  const targets = targetMap(entries)
+  const pct = weekConsistencyPercent(habits, checks, dateKeys, targets)
+  const formingWarn =
+    formingN > FORMING_SOFT_MAX
+      ? `<span class="time-warn"> · ${formingN} forming (aim ~${FORMING_SOFT_MAX})</span>`
+      : ''
+
+  const cells =
+    entries.length === 0
+      ? `<p class="empty plan-empty">No active habits — pick a pack or Activate from the library. Click a name anytime for Why &amp; How.</p>`
+      : `<div class="plan-grid">
+          ${entries
+            .map((e) => {
+              const hits = countHitsInWeek(e.habitId, checks, dateKeys)
+              const target = getEntryWeeklyTarget(e)
+              return renderPlanCell(e, hits, target)
+            })
+            .join('')}
+        </div>`
 
   return `
     <section class="panel active-panel">
       <div class="panel-title-row">
-        <h2>Active habits</h2>
+        <h2>Active plan
+          <span class="muted-inline">Forming ${formingN} · Formed ${formedN}${formingWarn}</span>
+        </h2>
         <div class="week-nav compact">
           <button type="button" class="icon" data-action="week-prev" aria-label="Previous week">‹</button>
           <span class="week-label">${esc(formatWeekLabel(weekKey))}</span>
           <button type="button" class="icon" data-action="week-next" aria-label="Next week">›</button>
           <button type="button" class="ghost tiny" data-action="week-today">This week</button>
+          <strong class="week-pct" title="Check-in consistency">${pct}%</strong>
         </div>
       </div>
-      <p class="panel-hint">Sticky set you live by — not rebuilt every week. Check boxes for each day. Radar uses all active habits.</p>
-      <div class="consistency-bar">
-        <div class="row">
-          <span>This week’s check-ins</span>
-          <strong>${pct}%</strong>
-        </div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
-      </div>
-      ${renderActiveTableSection('Formed', 'formed', formed, dateKeys, today, 'No formed habits yet — promote from Forming when stable.')}
-      ${renderActiveTableSection('Forming', 'forming', forming, dateKeys, today, 'Add from the library or a pack. Aim for ~6 forming at a time.')}
+      ${cells}
     </section>
   `
 }
-
-// ── Progress overview ──────────────────────────────────────────
 
 function renderProgressOverview(weekKey: string): string {
   const keys = recentWeekKeys(weekKey, 8)
   const entries = getActiveEntries()
   const habits = getHabitsByIds(entries.map((e) => e.habitId))
+  const targets = targetMap(entries)
 
   const cols = keys
     .map((k) => {
@@ -366,7 +351,7 @@ function renderProgressOverview(weekKey: string): string {
       const pct =
         habits.length === 0
           ? 0
-          : weekConsistencyPercent(habits, checks, dates)
+          : weekConsistencyPercent(habits, checks, dates, targets)
       const short = k.slice(-2)
       const isCurrent = k === weekKey
       return `
@@ -377,34 +362,10 @@ function renderProgressOverview(weekKey: string): string {
     })
     .join('')
 
-  // Per-habit hits this week
-  const dateKeys = weekDateKeys(weekKey)
-  const checks = loadChecksForDates(dateKeys)
-  const habitRows =
-    habits.length === 0
-      ? `<p class="empty">No active habits to summarize.</p>`
-      : `<ul class="overview-list">
-          ${habits
-            .map((h) => {
-              let hits = 0
-              for (const d of dateKeys) if (checks[d]?.[h.id]) hits++
-              const target = h.frequency === 'daily' ? 7 : h.frequency === 'several_per_week' ? 3 : 1
-              return `<li>
-                <span class="cat-dot" style="background:${CATEGORY_COLORS[h.category]}"></span>
-                ${esc(h.name)}
-                <strong>${hits}/${target}</strong>
-              </li>`
-            })
-            .join('')}
-        </ul>`
-
   return `
     <section class="section panel">
       <h2>Progress overview</h2>
-      <p class="panel-hint">Last 8 weeks of check-in consistency for your current active set. Switch week above the active table to inspect a specific week.</p>
       <div class="trend">${cols}</div>
-      <h3 class="subhead">Hits this week</h3>
-      ${habitRows}
     </section>
   `
 }
@@ -434,26 +395,24 @@ function renderLibrary(activeIds: Set<string>): string {
       const on = activeIds.has(h.id)
       const color = CATEGORY_COLORS[h.category]
       const custom = isCustomHabit(h.id)
+      const hub = h.secondaryTags?.includes('huberman')
       return `
         <article class="habit-card ${on ? 'selected' : ''}" style="${on ? `border-color:${color};box-shadow:inset 0 0 0 1px ${color}44` : catBorder(h.category)}">
           <header>
             <h3>
               <button type="button" class="linkish title-btn" data-action="view-habit" data-habit-id="${esc(h.id)}">${esc(h.name)}</button>
+              ${hub ? ' <em class="badge-custom">huberman</em>' : ''}
               ${custom ? ' <em class="badge-custom">custom</em>' : ''}
             </h3>
             <span class="cat-badge" style="${catStyle(h.category)}">${esc(CATEGORY_LABELS[h.category])}</span>
           </header>
-          <div class="habit-why">
-            <span class="field-label">Why</span>
-            <p>${esc(whyText(h).slice(0, 140))}${whyText(h).length > 140 ? '…' : ''}</p>
-          </div>
           <div class="habit-stats">
             <span>${esc(FREQUENCY_LABELS[h.frequency])}</span>
-            <span>${formatMinutes(h.timeEstimateMinutes)}</span>
+            <span>${h.timeEstimateMinutes <= 0 ? 'rule' : `~${formatMinutes(h.timeEstimateMinutes)}`}</span>
           </div>
           <footer class="habit-footer">
             <div class="habit-footer-left">
-              <button type="button" class="ghost" data-action="view-habit" data-habit-id="${esc(h.id)}">View</button>
+              <button type="button" class="ghost" data-action="view-habit" data-habit-id="${esc(h.id)}">Why / How</button>
               <button type="button" class="ghost" data-action="edit-habit" data-habit-id="${esc(h.id)}">Edit</button>
               ${
                 custom
@@ -472,19 +431,18 @@ function renderLibrary(activeIds: Set<string>): string {
   return `
     <section class="section">
       <div class="section-head">
-        <h2>Master library <span style="color:var(--muted);font-weight:400">(${list.length})</span></h2>
+        <h2>Library <span class="muted-inline">(${list.length})</span></h2>
         <div class="section-head-actions">
           <button type="button" class="primary" data-action="new-habit">+ Habit</button>
           <div class="chips">${chips}</div>
         </div>
       </div>
-      <p class="panel-hint">Click a habit name to open <strong>Why</strong> and <strong>How</strong> (view mode).</p>
       <div class="habit-grid">${cards}</div>
     </section>
   `
 }
 
-// ── Modals ─────────────────────────────────────────────────────
+// ── Modals (Why / How view is first-class) ─────────────────────
 
 function renderHabitViewModal(): string {
   if (!modal || modal.kind !== 'habit-view') return ''
@@ -503,7 +461,7 @@ function renderHabitViewModal(): string {
         </div>
         <div class="modal-body">
           <span class="cat-badge" style="${catStyle(h.category)}">${esc(CATEGORY_LABELS[h.category])}</span>
-          <span class="muted-inline"> · ${esc(FREQUENCY_LABELS[h.frequency])} · ${formatMinutes(h.timeEstimateMinutes)}</span>
+          <span class="muted-inline"> · ${esc(FREQUENCY_LABELS[h.frequency])} · ${h.timeEstimateMinutes <= 0 ? 'rule' : `~${formatMinutes(h.timeEstimateMinutes)}`}</span>
           <div class="detail-block" style="margin-top:1rem">
             <span class="field-label">Why</span>
             <p class="view-prose">${esc(whyText(h))}</p>
@@ -552,7 +510,6 @@ function renderHabitEditModal(): string {
     ? emptyHabitDraft()
     : (getHabit(editId) ?? emptyHabitDraft())
   const canDelete = !isNew && isCustomHabit(habit.id)
-
   const catOptions = CATEGORIES.map(
     (c) =>
       `<option value="${c}" ${habit.category === c ? 'selected' : ''}>${esc(CATEGORY_LABELS[c])}</option>`,
@@ -564,69 +521,43 @@ function renderHabitEditModal(): string {
 
   return `
     <div class="modal-backdrop" data-action="close-modal">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="habit-edit-title" data-stop>
+      <div class="modal" role="dialog" aria-modal="true" data-stop>
         <div class="modal-header">
-          <h2 id="habit-edit-title">${isNew ? 'New habit' : 'Edit habit'}</h2>
+          <h2>${isNew ? 'New habit' : 'Edit habit'}</h2>
           <button type="button" class="icon ghost" data-action="close-modal" aria-label="Close">✕</button>
         </div>
         <form id="habit-form" class="modal-form">
           <input type="hidden" name="id" value="${esc(habit.id)}" />
-          <label class="field">
-            <span>Name</span>
-            <input type="text" name="name" value="${esc(habit.name)}" required maxlength="80" />
-          </label>
-          <label class="field">
-            <span>Why (purpose)</span>
-            <textarea name="description" rows="2" required maxlength="500">${esc(whyText(habit))}</textarea>
-          </label>
-          <label class="field">
-            <span>How (steps)</span>
-            <textarea name="how" rows="4" required maxlength="1200">${esc(habit.how)}</textarea>
-          </label>
+          <label class="field"><span>Name</span>
+            <input type="text" name="name" value="${esc(habit.name)}" required maxlength="80" /></label>
+          <label class="field"><span>Why</span>
+            <textarea name="description" rows="2" required maxlength="500">${esc(whyText(habit))}</textarea></label>
+          <label class="field"><span>How (steps)</span>
+            <textarea name="how" rows="4" required maxlength="1200">${esc(habit.how)}</textarea></label>
           <div class="field-row">
-            <label class="field">
-              <span>Category</span>
-              <select name="category" required>${catOptions}</select>
-            </label>
-            <label class="field">
-              <span>Frequency</span>
-              <select name="frequency" required>${freqOptions}</select>
-            </label>
-            <label class="field">
-              <span>Time (min)</span>
-              <input type="number" name="timeEstimateMinutes" min="0" max="600" value="${habit.timeEstimateMinutes}" required />
-            </label>
+            <label class="field"><span>Category</span><select name="category">${catOptions}</select></label>
+            <label class="field"><span>Frequency</span><select name="frequency">${freqOptions}</select></label>
+            <label class="field"><span>Time (min)</span>
+              <input type="number" name="timeEstimateMinutes" min="0" max="600" value="${habit.timeEstimateMinutes}" required /></label>
           </div>
-          <fieldset class="field-group">
-            <legend>Difficulty (1–10)</legend>
+          <fieldset class="field-group"><legend>Difficulty</legend>
             <div class="field-row">
               ${numInput('diffTime', 'Time', habit.difficulty.time)}
               ${numInput('diffWillpower', 'Willpower', habit.difficulty.willpower)}
               ${numInput('diffEnergy', 'Energy', habit.difficulty.energy)}
             </div>
           </fieldset>
-          <fieldset class="field-group">
-            <legend>Expected effect (1–10)</legend>
+          <fieldset class="field-group"><legend>Effect</legend>
             <div class="field-row">
-              ${numInput('effShort', 'Short-term', habit.effect.shortTerm)}
-              ${numInput('effLong', 'Long-term', habit.effect.longTerm)}
+              ${numInput('effShort', 'Short', habit.effect.shortTerm)}
+              ${numInput('effLong', 'Long', habit.effect.longTerm)}
               ${numInput('effIdentity', 'Identity', habit.effect.identity)}
             </div>
           </fieldset>
-          <label class="field">
-            <span>Minimum effective dose</span>
-            <input type="text" name="med" value="${esc(habit.med)}" maxlength="200" />
-          </label>
-          <label class="field">
-            <span>High-intensity version</span>
-            <input type="text" name="highIntensity" value="${esc(habit.highIntensity)}" maxlength="200" />
-          </label>
+          <label class="field"><span>MED</span><input type="text" name="med" value="${esc(habit.med)}" /></label>
+          <label class="field"><span>High intensity</span><input type="text" name="highIntensity" value="${esc(habit.highIntensity)}" /></label>
           <div class="modal-footer">
-            ${
-              canDelete
-                ? `<button type="button" class="ghost danger-text" data-action="delete-habit" data-habit-id="${esc(habit.id)}">Delete</button>`
-                : `<span></span>`
-            }
+            ${canDelete ? `<button type="button" class="ghost danger-text" data-action="delete-habit" data-habit-id="${esc(habit.id)}">Delete</button>` : '<span></span>'}
             <div class="modal-footer-right">
               <button type="button" class="ghost" data-action="close-modal">Cancel</button>
               <button type="submit" class="primary">Save</button>
@@ -648,7 +579,7 @@ function renderPackModal(): string {
         id: '',
         name: '',
         description: '',
-        habitIds: activeIds.slice(),
+        habitIds: activeIds.slice(0, 6),
         custom: true,
       }
     : (getPack(editId) ?? {
@@ -658,14 +589,10 @@ function renderPackModal(): string {
         habitIds: [],
         custom: true,
       })
+  if (!isNew && !pack.custom) return ''
 
-  if (!isNew && !pack.custom) {
-    return ''
-  }
-
-  const habits = getHabits()
   const selected = new Set(pack.habitIds)
-  const checks = habits
+  const checks = getHabits()
     .map((h) => {
       const checked = selected.has(h.id) ? 'checked' : ''
       return `
@@ -673,7 +600,6 @@ function renderPackModal(): string {
           <input type="checkbox" name="habitIds" value="${esc(h.id)}" ${checked} />
           <span class="cat-dot" style="background:${CATEGORY_COLORS[h.category]}"></span>
           <span class="check-label">${esc(h.name)}</span>
-          <span class="check-meta">${esc(CATEGORY_LABELS[h.category])}</span>
         </label>`
     })
     .join('')
@@ -682,29 +608,18 @@ function renderPackModal(): string {
     <div class="modal-backdrop" data-action="close-modal">
       <div class="modal modal-wide" role="dialog" aria-modal="true" data-stop>
         <div class="modal-header">
-          <h2>${isNew ? 'New custom pack' : 'Edit pack'}</h2>
-          <button type="button" class="icon ghost" data-action="close-modal" aria-label="Close">✕</button>
+          <h2>${isNew ? 'New pack (aim ~6 habits)' : 'Edit pack'}</h2>
+          <button type="button" class="icon ghost" data-action="close-modal">✕</button>
         </div>
         <form id="pack-form" class="modal-form">
           <input type="hidden" name="id" value="${esc(pack.id)}" />
-          <label class="field">
-            <span>Name</span>
-            <input type="text" name="name" value="${esc(pack.name)}" required maxlength="60" />
-          </label>
-          <label class="field">
-            <span>Description</span>
-            <input type="text" name="description" value="${esc(pack.description)}" maxlength="200" />
-          </label>
-          <fieldset class="field-group pack-habits">
-            <legend>Habits in pack</legend>
+          <label class="field"><span>Name</span><input type="text" name="name" value="${esc(pack.name)}" required /></label>
+          <label class="field"><span>Description</span><input type="text" name="description" value="${esc(pack.description)}" /></label>
+          <fieldset class="field-group pack-habits"><legend>Habits</legend>
             <div class="check-list">${checks}</div>
           </fieldset>
           <div class="modal-footer">
-            ${
-              !isNew
-                ? `<button type="button" class="ghost danger-text" data-action="delete-pack" data-pack-id="${esc(pack.id)}">Delete</button>`
-                : `<span></span>`
-            }
+            ${!isNew ? `<button type="button" class="ghost danger-text" data-action="delete-pack" data-pack-id="${esc(pack.id)}">Delete</button>` : '<span></span>'}
             <div class="modal-footer-right">
               <button type="button" class="ghost" data-action="close-modal">Cancel</button>
               <button type="submit" class="primary">Save pack</button>
@@ -727,19 +642,8 @@ export function renderApp(root: HTMLElement): void {
   root.innerHTML = `
     ${renderHeader()}
     ${renderPacksBar()}
-    <div class="top-grid two-col">
-      ${renderRadarPanel(activeHabits)}
-      <div class="panel meta-side">
-        <h2>How this works</h2>
-        <ol class="howto-list">
-          <li><strong>Activate</strong> habits from the library (or a pack).</li>
-          <li>Keep ~<strong>${FORMING_SOFT_MAX} forming</strong>; promote to <strong>formed</strong> when stable.</li>
-          <li><strong>Check days</strong> in the table as you complete them.</li>
-          <li>Use <strong>overview</strong> for multi-week consistency.</li>
-        </ol>
-      </div>
-    </div>
-    ${renderActiveHabits(weekKey)}
+    ${renderRadarStrip(activeHabits)}
+    ${renderActivePlan(weekKey)}
     ${renderProgressOverview(weekKey)}
     ${renderLibrary(activeIds)}
     ${renderHabitViewModal()}
@@ -750,10 +654,11 @@ export function renderApp(root: HTMLElement): void {
   bindEvents(root, weekKey)
 
   if (modal) {
-    const first = root.querySelector<HTMLElement>(
-      '.modal input:not([type="hidden"]), .modal textarea, .modal select, .modal button.primary',
-    )
-    first?.focus()
+    root
+      .querySelector<HTMLElement>(
+        '.modal input:not([type="hidden"]), .modal textarea, .modal button.primary',
+      )
+      ?.focus()
   }
 }
 
@@ -763,12 +668,10 @@ function readHabitForm(form: HTMLFormElement): Habit | null {
   if (!name) return null
   let id = String(fd.get('id') ?? '').trim()
   if (!id) id = uniqueHabitId(name)
-
   const category = String(fd.get('category')) as Category
   if (!CATEGORIES.includes(category)) return null
   const frequency = String(fd.get('frequency')) as Frequency
   if (!FREQUENCIES.includes(frequency)) return null
-
   const existing = getHabit(id)
   const why = String(fd.get('description') ?? '').trim()
   const how = String(fd.get('how') ?? '').trim()
@@ -806,21 +709,22 @@ function readPackForm(form: HTMLFormElement): Pack | null {
   if (!name) return null
   let id = String(fd.get('id') ?? '').trim()
   if (!id) id = uniquePackId(name)
-  const habitIds = fd
-    .getAll('habitIds')
-    .map((v) => String(v))
-    .filter(Boolean)
   return {
     id,
     name,
     description: String(fd.get('description') ?? '').trim(),
-    habitIds,
+    habitIds: fd
+      .getAll('habitIds')
+      .map((v) => String(v))
+      .filter(Boolean),
     custom: true,
   }
 }
 
 function bindEvents(root: HTMLElement, weekKey: string): void {
   const rerender = () => renderApp(root)
+  const dateKeys = weekDateKeys(weekKey)
+  const today = todayKey()
 
   if (escapeHandler) document.removeEventListener('keydown', escapeHandler)
   escapeHandler = (e: KeyboardEvent) => {
@@ -857,8 +761,7 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     const file = fileInput.files?.[0]
     if (!file) return
     try {
-      const text = await file.text()
-      const blob = JSON.parse(text) as ExportBlob
+      const blob = JSON.parse(await file.text()) as ExportBlob
       if (blob.version !== 1) throw new Error('Unsupported export version')
       importAll(blob)
       showToast('Import complete', 'ok')
@@ -892,8 +795,7 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
   root
     .querySelector('[data-action="apply-pack-select"]')
     ?.addEventListener('click', () => {
-      const sel = root.querySelector<HTMLSelectElement>('#pack-select')
-      const id = sel?.value
+      const id = root.querySelector<HTMLSelectElement>('#pack-select')?.value
       if (!id) {
         showToast('Choose a pack first', 'error')
         return
@@ -902,7 +804,7 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
       const pack = getPack(id)
       showToast(
         added > 0
-          ? `Added ${added} habit(s) from ${pack?.name ?? 'pack'} as forming`
+          ? `Added ${added} from ${pack?.name ?? 'pack'} — remove any you do not want`
           : 'All pack habits already active',
         added > 0 ? 'ok' : 'info',
       )
@@ -913,17 +815,15 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     modal = { kind: 'pack', packId: null }
     rerender()
   })
-
   root.querySelector('[data-action="manage-pack"]')?.addEventListener('click', () => {
-    const sel = root.querySelector<HTMLSelectElement>('#pack-select')
-    const id = sel?.value
+    const id = root.querySelector<HTMLSelectElement>('#pack-select')?.value
     if (!id) {
-      showToast('Choose a pack to edit', 'error')
+      showToast('Choose a pack', 'error')
       return
     }
     const pack = getPack(id)
     if (!pack?.custom) {
-      showToast('Built-in packs cannot be edited — create a custom pack', 'error')
+      showToast('Built-in packs are fixed — create a custom pack to edit', 'error')
       return
     }
     modal = { kind: 'pack', packId: id }
@@ -931,7 +831,8 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
   })
 
   root.querySelectorAll('[data-action="view-habit"]').forEach((el) => {
-    el.addEventListener('click', () => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation()
       const id = (el as HTMLElement).dataset.habitId
       if (!id) return
       modal = { kind: 'habit-view', habitId: id }
@@ -943,7 +844,6 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     modal = { kind: 'habit-edit', habitId: null }
     rerender()
   })
-
   root.querySelectorAll('[data-action="edit-habit"]').forEach((el) => {
     el.addEventListener('click', () => {
       const id = (el as HTMLElement).dataset.habitId
@@ -953,32 +853,68 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     })
   })
 
-  root.querySelectorAll('[data-action="delete-habit"]').forEach((el) => {
-    el.addEventListener('click', () => {
+  root.querySelectorAll('[data-action="hit-plus"]').forEach((el) => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation()
       const id = (el as HTMLElement).dataset.habitId
       if (!id) return
-      if (!confirm('Delete this custom habit?')) return
-      if (!deleteHabit(id)) {
-        showToast('Core habits cannot be deleted', 'error')
-        return
-      }
-      modal = null
-      showToast('Habit deleted', 'ok')
+      if (logHitToday(id, today)) showToast('Logged for today', 'ok')
+      else showToast('Already logged today', 'info')
+      rerender()
+    })
+  })
+  root.querySelectorAll('[data-action="hit-minus"]').forEach((el) => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation()
+      const id = (el as HTMLElement).dataset.habitId
+      if (!id) return
+      if (undoHitInWeek(id, today, dateKeys)) showToast('Hit undone', 'ok')
+      else showToast('No hits to undo this week', 'info')
+      rerender()
+    })
+  })
+  root.querySelectorAll('[data-action="tgt-plus"]').forEach((el) => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation()
+      const id = (el as HTMLElement).dataset.habitId
+      if (!id) return
+      bumpActiveWeeklyTarget(id, 1)
+      rerender()
+    })
+  })
+  root.querySelectorAll('[data-action="tgt-minus"]').forEach((el) => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation()
+      const id = (el as HTMLElement).dataset.habitId
+      if (!id) return
+      bumpActiveWeeklyTarget(id, -1)
       rerender()
     })
   })
 
-  root.querySelectorAll('[data-action="delete-pack"]').forEach((el) => {
+  root.querySelectorAll('[data-action="mark-formed"]').forEach((el) => {
     el.addEventListener('click', () => {
-      const id = (el as HTMLElement).dataset.packId
+      const id = (el as HTMLElement).dataset.habitId
       if (!id) return
-      if (!confirm('Delete this custom pack?')) return
-      if (!deletePack(id)) {
-        showToast('Built-in packs cannot be deleted', 'error')
-        return
-      }
-      modal = null
-      showToast('Pack deleted', 'ok')
+      setHabitStage(id, 'formed')
+      showToast('Marked formed', 'ok')
+      rerender()
+    })
+  })
+  root.querySelectorAll('[data-action="mark-forming"]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const id = (el as HTMLElement).dataset.habitId
+      if (!id) return
+      setHabitStage(id, 'forming')
+      rerender()
+    })
+  })
+  root.querySelectorAll('[data-action="deactivate"]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const id = (el as HTMLElement).dataset.habitId
+      if (!id) return
+      removeActiveHabit(id)
+      showToast('Removed from active', 'ok')
       rerender()
     })
   })
@@ -991,95 +927,61 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
         removeActiveHabit(id)
         showToast('Removed from active', 'ok')
       } else {
-        const forming = getActiveEntries().filter((e) => e.stage === 'forming')
         addActiveHabit(id, 'forming')
-        if (forming.length + 1 > FORMING_SOFT_MAX) {
-          showToast(
-            `Activated (forming now ${forming.length + 1}; ~${FORMING_SOFT_MAX} suggested)`,
-            'info',
-          )
-        } else {
-          showToast('Added as forming', 'ok')
-        }
-      }
-      // Keep view open if viewing this habit
-      if (modal?.kind === 'habit-view' && modal.habitId === id) {
-        /* stay */
+        const n = getActiveEntries().filter((e) => e.stage === 'forming').length
+        showToast(
+          n > FORMING_SOFT_MAX
+            ? `Activated (${n} forming — aim ~${FORMING_SOFT_MAX})`
+            : 'Added as forming',
+          n > FORMING_SOFT_MAX ? 'info' : 'ok',
+        )
       }
       rerender()
     })
   })
 
-  root.querySelectorAll('[data-action="deactivate"]').forEach((el) => {
+  root.querySelectorAll('[data-action="delete-habit"]').forEach((el) => {
     el.addEventListener('click', () => {
       const id = (el as HTMLElement).dataset.habitId
-      if (!id) return
-      removeActiveHabit(id)
-      showToast('Removed from active', 'ok')
+      if (!id || !confirm('Delete this custom habit?')) return
+      if (!deleteHabit(id)) {
+        showToast('Core habits cannot be deleted', 'error')
+        return
+      }
+      modal = null
+      showToast('Deleted', 'ok')
       rerender()
     })
   })
-
-  root.querySelectorAll('[data-action="mark-formed"]').forEach((el) => {
+  root.querySelectorAll('[data-action="delete-pack"]').forEach((el) => {
     el.addEventListener('click', () => {
-      const id = (el as HTMLElement).dataset.habitId
-      if (!id) return
-      setHabitStage(id, 'formed')
-      showToast('Marked as formed', 'ok')
+      const id = (el as HTMLElement).dataset.packId
+      if (!id || !confirm('Delete custom pack?')) return
+      deletePack(id)
+      modal = null
       rerender()
     })
   })
 
-  root.querySelectorAll('[data-action="mark-forming"]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const id = (el as HTMLElement).dataset.habitId
-      if (!id) return
-      setHabitStage(id, 'forming')
-      showToast('Moved to forming', 'ok')
-      rerender()
-    })
-  })
-
-  root.querySelectorAll('[data-action="toggle-day"]').forEach((el) => {
-    el.addEventListener('change', () => {
-      const input = el as HTMLInputElement
-      const id = input.dataset.habitId
-      const date = input.dataset.date
-      if (!id || !date) return
-      setDayDone(date, id, input.checked)
-      // Soft refresh consistency without full focus steal: full rerender ok
-      rerender()
-    })
-  })
-
-  const habitForm = root.querySelector<HTMLFormElement>('#habit-form')
-  habitForm?.addEventListener('submit', (ev) => {
+  root.querySelector<HTMLFormElement>('#habit-form')?.addEventListener('submit', (ev) => {
     ev.preventDefault()
-    const habit = readHabitForm(habitForm)
-    if (!habit?.description) {
-      showToast('Why is required', 'error')
-      return
-    }
-    if (!habit.how) {
-      showToast('How is required', 'error')
+    const form = ev.target as HTMLFormElement
+    const habit = readHabitForm(form)
+    if (!habit?.description || !habit.how) {
+      showToast('Why and How are required', 'error')
       return
     }
     saveHabit(habit)
     modal = { kind: 'habit-view', habitId: habit.id }
-    showToast('Habit saved', 'ok')
+    showToast('Saved', 'ok')
     rerender()
   })
 
-  const packForm = root.querySelector<HTMLFormElement>('#pack-form')
-  packForm?.addEventListener('submit', (ev) => {
+  root.querySelector<HTMLFormElement>('#pack-form')?.addEventListener('submit', (ev) => {
     ev.preventDefault()
-    const pack = readPackForm(packForm)
-    if (!pack) {
-      showToast('Please name the pack', 'error')
-      return
-    }
-    if (pack.habitIds.length === 0) {
-      showToast('Select at least one habit', 'error')
+    const pack = readPackForm(ev.target as HTMLFormElement)
+    if (!pack || pack.habitIds.length === 0) {
+      showToast('Name + at least one habit', 'error')
       return
     }
     savePack(pack)

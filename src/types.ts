@@ -55,7 +55,16 @@ export interface Pack {
 export interface ActiveHabitEntry {
   habitId: string
   stage: HabitStage
+  /**
+   * Weekly hit target override (1–7). If omitted, derived from habit frequency.
+   * Does not change the library habit’s frequency field.
+   */
+  weeklyTarget?: number
 }
+
+/** Clamp for per-active-habit weekly hit targets (day-log model maxes at 7). */
+export const WEEKLY_TARGET_MIN = 1
+export const WEEKLY_TARGET_MAX = 7
 
 /** Day log: which habits were done on YYYY-MM-DD. */
 export interface DayChecks {

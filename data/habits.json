@@ -1116,5 +1116,484 @@
     "frequency": "daily",
     "timeEstimateMinutes": 20,
     "source": "core"
+  },
+  {
+    "id": "hub-morning-sunlight",
+    "name": "Morning outdoor light",
+    "description": "Why: Early bright light (ideally outdoor) sets circadian clocks, supports daytime alertness and nighttime sleep pressure—core Huberman circadian protocol.",
+    "how": "1) Within ~30–60 min of waking, get outdoor light (no sunglasses if safe).\n2) Aim ~10 min bright day / ~20–30 min cloudy.\n3) Do not stare at the sun; face general outdoor brightness.\n4) If you wake before sunrise, use bright indoor light then go outside after dawn.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "circadian",
+      "sleep"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 3,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 9,
+      "identity": 6
+    },
+    "med": "5–10 minutes outdoor light after wake",
+    "highIntensity": "20–30 minutes outdoor + morning walk",
+    "frequency": "daily",
+    "timeEstimateMinutes": 15,
+    "source": "core"
+  },
+  {
+    "id": "hub-delay-caffeine",
+    "name": "Delay caffeine 90–120 min",
+    "description": "Why: Waiting 90–120 minutes after waking lets adenosine clear and cortisol peak settle; often reduces mid-morning crash (Huberman caffeine timing protocol).",
+    "how": "1) Note wake time.\n2) No caffeine for 90–120 minutes.\n3) Hydrate; use light and movement for early alertness.\n4) Then take caffeine if desired; cut off ~8–10 h before bed.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "caffeine",
+      "sleep"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 6,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 6
+    },
+    "med": "Wait at least 90 minutes post-wake",
+    "highIntensity": "120 minutes + fixed afternoon caffeine cutoff",
+    "frequency": "daily",
+    "timeEstimateMinutes": 0,
+    "source": "core"
+  },
+  {
+    "id": "hub-physiological-sigh",
+    "name": "Physiological double sigh",
+    "description": "Why: Two inhales through the nose + long exhale through the mouth rapidly reduces autonomic arousal—fast stress tool from Huberman / Feldman research.",
+    "how": "1) Inhale fully through the nose.\n2) Sip a second short inhale to fully inflate lungs.\n3) Long slow exhale through the mouth until empty.\n4) Repeat 1–3 cycles when stressed or before sleep.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "stress",
+      "breath"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 2,
+      "energy": 1
+    },
+    "effect": {
+      "shortTerm": 7,
+      "longTerm": 6,
+      "identity": 5
+    },
+    "med": "1–3 double sighs as needed",
+    "highIntensity": "5-minute bout of cyclic sighs",
+    "frequency": "daily",
+    "timeEstimateMinutes": 3,
+    "source": "core"
+  },
+  {
+    "id": "hub-nsdr",
+    "name": "NSDR / Yoga Nidra",
+    "description": "Why: Non-sleep deep rest restores dopamine and recovery without a full nap; Huberman often recommends NSDR after learning or poor sleep.",
+    "how": "1) Lie down; use a NSDR or Yoga Nidra audio (10–30 min).\n2) Stay still; follow body scan / breath cues.\n3) If you fall asleep, fine—still useful.\n4) Use after deep work, training, or sleep debt days.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "recovery",
+      "focus"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 3,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 7,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "10-minute NSDR",
+    "highIntensity": "20–30 minute Yoga Nidra",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 20,
+    "source": "core"
+  },
+  {
+    "id": "hub-zone2",
+    "name": "Zone-2 cardio (Huberman)",
+    "description": "Why: Sustained easy aerobic work supports mitochondrial and cardiovascular health; Huberman commonly cites ~150–200 min/week Zone 2 as a backbone.",
+    "how": "1) Choose walk, jog, bike, row at conversational pace.\n2) Stay nasal-breathing easy or able to speak sentences.\n3) Build toward multi-session weekly total (not one redline day).\n4) Separate from hard intervals when possible.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "cardio"
+    ],
+    "difficulty": {
+      "time": 6,
+      "willpower": 3,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 9,
+      "identity": 5
+    },
+    "med": "30 minutes easy Zone 2",
+    "highIntensity": "45–60 minutes true Zone 2",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 45,
+    "source": "core"
+  },
+  {
+    "id": "hub-resistance",
+    "name": "Resistance training bout",
+    "description": "Why: Progressive resistance supports muscle, metabolism, bone, and neuromodulators; Huberman frames strength work as non-negotiable for long-term healthspan.",
+    "how": "1) Train major patterns (squat/hinge/push/pull/carry) 2–4×/week.\n2) Leave 1–3 reps in reserve; progress load or reps over weeks.\n3) Warm up joints; control eccentrics.\n4) Sleep and protein support adaptation.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "strength"
+    ],
+    "difficulty": {
+      "time": 6,
+      "willpower": 5,
+      "energy": 7
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 9,
+      "identity": 7
+    },
+    "med": "30-minute full-body session",
+    "highIntensity": "60–75 minute quality strength session",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 50,
+    "source": "core"
+  },
+  {
+    "id": "hub-evening-dim",
+    "name": "Evening dim / low overhead light",
+    "description": "Why: Bright overhead and blue-heavy light at night suppresses melatonin and shifts clocks late; dim, low lamps protect sleep timing.",
+    "how": "1) After sunset, reduce overhead LEDs.\n2) Prefer lamps, warm light, lower screens brightness.\n3) If screens are required, dim + distance; consider blue reduction late.\n4) Keep bedroom dark for sleep.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "sleep",
+      "light"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 5,
+      "energy": 1
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 8,
+      "identity": 6
+    },
+    "med": "Dim overheads after ~21:00",
+    "highIntensity": "Full wind-down lighting from 2–3 h before bed",
+    "frequency": "daily",
+    "timeEstimateMinutes": 0,
+    "source": "core"
+  },
+  {
+    "id": "hub-cold-exposure",
+    "name": "Deliberate cold exposure",
+    "description": "Why: Brief cold (shower/plunge) can raise alertness and resilience to stress; Huberman discusses cold as a deliberate stressor with recovery benefits when dosed sanely.",
+    "how": "1) End shower with 1–3 min cool/cold, or short plunge.\n2) Breathe calm; do not hyperventilate dangerously in water.\n3) 2–4×/week is enough for most; avoid forcing if ill.\n4) Not a substitute for sleep or training basics.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "cold",
+      "stress"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 7,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 6,
+      "identity": 6
+    },
+    "med": "60–90 seconds cold finish on shower",
+    "highIntensity": "2–3 minutes cold plunge or long cold shower",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 5,
+    "source": "core"
+  },
+  {
+    "id": "hub-sauna-heat",
+    "name": "Deliberate heat (sauna)",
+    "description": "Why: Repeated heat exposure is linked with cardiovascular and recovery benefits in the literature Huberman cites; use heat as a deliberate protocol, not ego endurance.",
+    "how": "1) Sauna or hot bath in safe ranges for your health status.\n2) Typical pattern discussed: multiple rounds/week, not extreme one-offs.\n3) Hydrate; exit if dizzy; medical clearance if needed.\n4) Pair with cool-down; avoid right before late sleep if it impairs you.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "heat",
+      "recovery"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 4,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 5
+    },
+    "med": "One 10–15 min heat bout",
+    "highIntensity": "2–3 rounds with cool breaks",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 25,
+    "source": "core"
+  },
+  {
+    "id": "hub-focus-ultradian",
+    "name": "90-minute focus bout",
+    "description": "Why: Ultradian ~90-minute deep work matches natural alertness cycles; Huberman emphasizes phone-free focus then rest/NSDR.",
+    "how": "1) Define one cognitive outcome.\n2) Phone out of room; notifications off.\n3) Work ~90 minutes (or 50–90 if building up).\n4) Then deliberate rest: walk, NSDR, or soft eyes—not more doomscroll.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "huberman",
+      "focus"
+    ],
+    "difficulty": {
+      "time": 7,
+      "willpower": 7,
+      "energy": 7
+    },
+    "effect": {
+      "shortTerm": 8,
+      "longTerm": 9,
+      "identity": 8
+    },
+    "med": "50-minute deep bout",
+    "highIntensity": "Full 90 minutes + 10–20 min NSDR after",
+    "frequency": "daily",
+    "timeEstimateMinutes": 90,
+    "source": "core"
+  },
+  {
+    "id": "hub-post-meal-walk",
+    "name": "Post-meal walk",
+    "description": "Why: Light walking after meals improves glucose disposal and aids digestion/alertness; simple high-ROI protocol Huberman often endorses.",
+    "how": "1) After a main meal, walk 5–30 minutes easy.\n2) Outdoor light is a bonus.\n3) Keep it conversational; not a workout substitute.\n4) Consistency beats duration.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "glucose",
+      "walk"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 3,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 7,
+      "identity": 4
+    },
+    "med": "5–10 minute walk after one meal",
+    "highIntensity": "20–30 minutes after main meal",
+    "frequency": "daily",
+    "timeEstimateMinutes": 15,
+    "source": "core"
+  },
+  {
+    "id": "hub-phone-morning",
+    "name": "No phone first 60–90 min",
+    "description": "Why: Early high-dopamine phone use spikes then flattens motivation; Huberman advises delaying phone to protect morning dopamine baseline.",
+    "how": "1) Wake without opening social/email apps.\n2) Light, move, hydrate, plan first.\n3) First phone use after 60–90 minutes (or after key morning block).\n4) Put phone to charge outside reach overnight if needed.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "huberman",
+      "dopamine",
+      "focus"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 8,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 8,
+      "identity": 8
+    },
+    "med": "No phone 60 minutes after wake",
+    "highIntensity": "90+ minutes + phone in another room",
+    "frequency": "daily",
+    "timeEstimateMinutes": 0,
+    "source": "core"
+  },
+  {
+    "id": "hub-view-distance",
+    "name": "Panoramic / distance vision breaks",
+    "description": "Why: Long hours of near focus (screens) stress the visual system; outdoor panoramic vision and distance gazes support eye comfort and circadian light entry.",
+    "how": "1) Every 20–30 min of near work, look far for 20–30+ seconds.\n2) Get outdoor distance viewing daily when possible.\n3) Soften gaze; avoid constant “tunnel” screen posture.\n4) Combine with morning outdoor light protocol.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "vision",
+      "desk"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 3,
+      "energy": 1
+    },
+    "effect": {
+      "shortTerm": 4,
+      "longTerm": 6,
+      "identity": 4
+    },
+    "med": "Hourly distance gaze breaks",
+    "highIntensity": "Outdoor panoramic walk midday",
+    "frequency": "daily",
+    "timeEstimateMinutes": 5,
+    "source": "core"
+  },
+  {
+    "id": "hub-learn-then-rest",
+    "name": "Learn then deliberate rest",
+    "description": "Why: Skill and knowledge stick better when deep encoding is followed by rest/NSDR rather than immediate distraction—Huberman learning protocol theme.",
+    "how": "1) Do a focused learning block (reading, skill, language).\n2) Immediately after: 10–20 min NSDR, quiet walk, or eyes-closed rest.\n3) Avoid switching to high-dopamine phone content right after.\n4) Space repetitions across days.",
+    "category": "intelligence",
+    "secondaryTags": [
+      "huberman",
+      "learning"
+    ],
+    "difficulty": {
+      "time": 5,
+      "willpower": 5,
+      "energy": 5
+    },
+    "effect": {
+      "shortTerm": 5,
+      "longTerm": 9,
+      "identity": 7
+    },
+    "med": "25 min learn + 10 min rest",
+    "highIntensity": "60–90 min learn + 20 min NSDR",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 45,
+    "source": "core"
+  },
+  {
+    "id": "hub-social-connection",
+    "name": "Quality social connection",
+    "description": "Why: Real social connection is a major neuromodulator and healthspan factor; Huberman discusses relationships as biological, not optional soft skills.",
+    "how": "1) Schedule or seize one real connection (call, meal, walk).\n2) Prefer presence over performative networking.\n3) Listen; share something real.\n4) Protect recurring high-quality ties weekly.",
+    "category": "social",
+    "secondaryTags": [
+      "huberman",
+      "relationships"
+    ],
+    "difficulty": {
+      "time": 4,
+      "willpower": 4,
+      "energy": 4
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 8,
+      "identity": 7
+    },
+    "med": "One meaningful 15-minute connection",
+    "highIntensity": "In-person quality time 45–90 min",
+    "frequency": "several_per_week",
+    "timeEstimateMinutes": 30,
+    "source": "core"
+  },
+  {
+    "id": "hub-sleep-consistency",
+    "name": "Sleep schedule consistency",
+    "description": "Why: Consistent sleep/wake timing is among the highest-ROI levers Huberman emphasizes for mood, hormones, and cognition.",
+    "how": "1) Fix a wake time (including weekends ±30–60 min max).\n2) Back-calculate bedtime for sufficient duration.\n3) Protect wind-down; same cue sequence nightly.\n4) Use morning light to anchor the schedule.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "sleep"
+    ],
+    "difficulty": {
+      "time": 1,
+      "willpower": 7,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 9,
+      "identity": 7
+    },
+    "med": "Wake within ±30 min daily",
+    "highIntensity": "Fixed wake + fixed bedtime including weekends",
+    "frequency": "daily",
+    "timeEstimateMinutes": 0,
+    "source": "core"
+  },
+  {
+    "id": "hub-alertness-walk",
+    "name": "Morning movement for alertness",
+    "description": "Why: Light + movement after waking raises body temperature and alertness; Huberman pairs outdoor walking with circadian light exposure.",
+    "how": "1) After wake, move: walk, mobility, or easy calisthenics.\n2) Prefer outdoor for light combo.\n3) 5–30 minutes; not a max workout.\n4) Then deep work or delayed caffeine window.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "movement"
+    ],
+    "difficulty": {
+      "time": 3,
+      "willpower": 4,
+      "energy": 3
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 7,
+      "identity": 5
+    },
+    "med": "5–10 minute morning walk",
+    "highIntensity": "20–30 minute brisk outdoor walk",
+    "frequency": "daily",
+    "timeEstimateMinutes": 15,
+    "source": "core"
+  },
+  {
+    "id": "hub-scripted-breathing",
+    "name": "Cyclic sighing practice",
+    "description": "Why: Brief daily cyclic sighing improved mood in peer-reviewed work Huberman has highlighted; a structured daily breath practice beats ad-hoc only.",
+    "how": "1) Sit or stand tall.\n2) For 5 minutes: repeated physiological double sighs (or guided cyclic sighing).\n3) Same time daily if possible (e.g. afternoon stress peak).\n4) Track mood/energy subjectively.",
+    "category": "health",
+    "secondaryTags": [
+      "huberman",
+      "breath",
+      "mood"
+    ],
+    "difficulty": {
+      "time": 2,
+      "willpower": 3,
+      "energy": 2
+    },
+    "effect": {
+      "shortTerm": 6,
+      "longTerm": 7,
+      "identity": 5
+    },
+    "med": "3 minutes cyclic sighing",
+    "highIntensity": "5 minutes dedicated practice",
+    "frequency": "daily",
+    "timeEstimateMinutes": 5,
+    "source": "core"
   }
 ]

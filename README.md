@@ -39,12 +39,13 @@ User data stays in each visitor’s browser `localStorage` (no Netlify backend r
 
 ## Daily loop
 
-1. Keep a sticky **active** set: **Forming** (~6) and **Formed**.
-2. Apply a **pack** from the dropdown (adds missing habits as forming) or **Activate** from the library.
-3. Click a habit name for **Why / How** (view mode). Edit only when you need to change content.
-4. Check off **Mon–Sun** in the active table as you complete habits.
-5. Use week ‹ › only to review another week’s check-ins / **progress overview**.
-6. **Export** periodically so a browser wipe doesn’t erase history.
+1. **Packs** (6 habits each): **Add to active** merges into your set — remove what you do not want.
+2. **Active plan** is a ~4-column grid: cell **fill** = hits / weekly target; **~time** = session effort.
+3. **+ / −** log hits; **tgt±** adjusts weekly target (1–7) per habit.
+4. Click a habit **name** for **Why / How** (full protocol). **✓** promotes forming → formed.
+5. Week ‹ › only for overview history. **Export** backups to protect against browser wipe.
+
+Includes **Huberman-aligned** protocols (foundations, sleep, focus, fitness, stress, social packs).
 
 ## Data you can edit
 

@@ -41,7 +41,7 @@ Local-first **active habits tracker**: pick habits from a master library (plus c
 ## Quality bar
 
 1. **Boot**: `npm run dev` shows library + empty/current protocol; never blank white screen.
-2. **Daily loop**: active table day checkboxes → promote forming→formed when stable (~6 forming).
+2. **Daily loop**: active **plan grid** cells fill by hits/weekly target; click name for Why/How; packs merge 6 habits into active.
 3. **Custom data**: add/edit habit, add/edit pack; custom only can delete; export includes customs/overrides.
 4. **Category colors** stay consistent (badges, chips, protocol border, radar labels).
 5. **A11y**: modals have `aria-modal`; Escape closes; first field focuses; visible focus rings.
@@ -59,12 +59,12 @@ npm run dev
 
 Manual smoke:
 
-1. Apply **Balance Reset** → radar non-zero on multiple axes  
-2. +/− a habit completion → consistency % changes  
-3. **+ Habit** → save → appears in library with category color  
-4. **+ Pack** from current week → apply after clearing  
-5. Export → Import → state restored; toast feedback  
-6. Escape closes open modal  
+1. Apply a pack (6 habits) → cells appear; remove any unwanted  
+2. + hit / − hit on a cell → fill and % update  
+3. tgt± adjusts weekly target (1–7)  
+4. Click habit name → Why / How view  
+5. Export → Import → state restored  
+6. Escape closes modal  
 
 ## Lessons encoded
 

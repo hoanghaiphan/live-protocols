@@ -36,11 +36,41 @@ export function weeklyTarget(habit: Habit): number {
   return WEEKLY_TARGETS[habit.frequency]
 }
 
-export function weeklyTimeEstimate(habits: Habit[]): number {
-  return habits.reduce(
-    (sum, h) => sum + h.timeEstimateMinutes * weeklyTarget(h),
-    0,
-  )
+/** Resolve target: optional override, else frequency default. */
+export function resolveWeeklyTarget(
+  habit: Habit,
+  override?: number | null,
+): number {
+  if (
+    typeof override === 'number' &&
+    Number.isFinite(override) &&
+    override >= 1
+  ) {
+    return Math.min(7, Math.max(1, Math.round(override)))
+  }
+  return weeklyTarget(habit)
+}
+
+export function countHitsInWeek(
+  habitId: string,
+  checksByDate: Record<string, Record<string, boolean>>,
+  dateKeys: string[],
+): number {
+  let hits = 0
+  for (const d of dateKeys) {
+    if (checksByDate[d]?.[habitId]) hits++
+  }
+  return hits
+}
+
+export function weeklyTimeEstimate(
+  habits: Habit[],
+  targetByHabitId?: Record<string, number>,
+): number {
+  return habits.reduce((sum, h) => {
+    const t = targetByHabitId?.[h.id] ?? weeklyTarget(h)
+    return sum + h.timeEstimateMinutes * t
+  }, 0)
 }
 
 export type CategoryScores = Record<Category, number>
@@ -73,22 +103,23 @@ export function weakestCategory(scores: CategoryScores): Category | null {
   return entries[0][0]
 }
 
-/** Consistency from day-check map for one ISO week’s dates. */
+/**
+ * Consistency from day-check map for one ISO week’s dates.
+ * `targetByHabitId` optional overrides (active plan weekly targets).
+ */
 export function weekConsistencyPercent(
   habits: Habit[],
   checksByDate: Record<string, Record<string, boolean>>,
   dateKeys: string[],
+  targetByHabitId?: Record<string, number>,
 ): number {
   if (habits.length === 0 || dateKeys.length === 0) return 0
   let done = 0
   let target = 0
   for (const h of habits) {
-    const t = weeklyTarget(h)
+    const t = resolveWeeklyTarget(h, targetByHabitId?.[h.id])
     target += t
-    let hits = 0
-    for (const d of dateKeys) {
-      if (checksByDate[d]?.[h.id]) hits++
-    }
+    const hits = countHitsInWeek(h.id, checksByDate, dateKeys)
     done += Math.min(hits, t)
   }
   if (target === 0) return 0
