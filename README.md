@@ -45,7 +45,9 @@ User data stays in each visitor’s browser `localStorage` (no Netlify backend r
 4. Click a habit **name** for **Why / How** (full protocol). **✓** promotes forming → formed.
 5. Week ‹ › only for overview history. **Export** backups to protect against browser wipe.
 
-Includes **Huberman-aligned** protocols (foundations, sleep, focus, fitness, stress, social packs).
+Includes **Huberman-aligned** protocols (educational synthesis of common Huberman Lab themes—not medical advice / not official).
+
+**Huberman packs (6 habits each):** Foundations, Sleep (+ Advanced), Focus, Fitness (+ Advanced), Stress, Social, Learning Basic / Advanced, Creativity, Breath Basic / Advanced, Dopamine & Drive, Vision, Metabolism & Meals, Mind & Meditation, Light & Circadian.
 
 ## Data you can edit
 

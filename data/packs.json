@@ -206,5 +206,161 @@
       "social-relationship-crm",
       "hub-post-meal-walk"
     ]
+  },
+  {
+    "id": "huberman-learning-basic",
+    "name": "Huberman Learning · Basic",
+    "description": "Core learning stack: ultradian block, retrieval, teach-back, space, rest after learn, sleep after hard learning.",
+    "habitIds": [
+      "hub-ultradian-learn",
+      "hub-retrieval-practice",
+      "hub-teach-back",
+      "hub-space-repetitions",
+      "hub-learn-then-rest",
+      "hub-sleep-after-learn"
+    ]
+  },
+  {
+    "id": "huberman-learning-advanced",
+    "name": "Huberman Learning · Advanced",
+    "description": "Deeper plasticity tools: errors, interleaving, generation, handwriting, visual spotlight, focus bout.",
+    "habitIds": [
+      "hub-error-learning",
+      "hub-interleave-practice",
+      "hub-generation-effect",
+      "hub-handwrite-notes",
+      "hub-visual-focus-spotlight",
+      "hub-focus-ultradian"
+    ]
+  },
+  {
+    "id": "huberman-creativity",
+    "name": "Huberman Creativity",
+    "description": "Create before dopamine, undistracted walks, play, novelty, single-context blocks, NSDR for insight.",
+    "habitIds": [
+      "hub-morning-create-first",
+      "hub-default-mode-walk",
+      "hub-play-without-goal",
+      "hub-novelty-input",
+      "hub-limit-context-switch",
+      "hub-nsdr-for-insight"
+    ]
+  },
+  {
+    "id": "huberman-breath-basic",
+    "name": "Huberman Breath · Basic",
+    "description": "Daily breath tools: physiological sigh practice, cyclic sighing, long exhale, box, nasal default, pre-sleep sighs.",
+    "habitIds": [
+      "hub-physiological-sigh",
+      "hub-scripted-breathing",
+      "hub-long-exhale",
+      "hub-box-breathing",
+      "hub-nasal-default",
+      "hub-pre-sleep-breath"
+    ]
+  },
+  {
+    "id": "huberman-breath-advanced",
+    "name": "Huberman Breath · Advanced",
+    "description": "Spike-response sighs, CO₂ walk, cautious cyclic hyperventilation, cold, NSDR, stress reframe.",
+    "habitIds": [
+      "hub-physiological-sigh-stack",
+      "hub-co2-tolerance",
+      "hub-cyclic-hyperventilation-caution",
+      "hub-cold-exposure",
+      "hub-nsdr",
+      "hub-growth-mindset-script"
+    ]
+  },
+  {
+    "id": "huberman-dopamine",
+    "name": "Huberman Dopamine & Drive",
+    "description": "Baseline and motivation: low-dopamine morning, effort→reward, intermittent reward, phone delay, cold, gratitude story.",
+    "habitIds": [
+      "hub-dopamine-fast-window",
+      "hub-effort-then-reward",
+      "hub-intermittent-reward",
+      "hub-phone-morning",
+      "hub-cold-for-dopamine",
+      "hub-gratitude-specific"
+    ]
+  },
+  {
+    "id": "huberman-vision",
+    "name": "Huberman Vision",
+    "description": "Eyes and light: morning light, distance breaks, near–far, smooth pursuit, blinks, midday outdoor.",
+    "habitIds": [
+      "hub-morning-sunlight",
+      "hub-view-distance",
+      "hub-near-far-focus",
+      "hub-smooth-pursuit",
+      "hub-blink-complete",
+      "hub-outdoor-midday"
+    ]
+  },
+  {
+    "id": "huberman-sleep-advanced",
+    "name": "Huberman Sleep · Advanced",
+    "description": "Beyond basics: caffeine cutoff, red/amber night, last-meal buffer, pre-sleep breath, exercise timing, consistency.",
+    "habitIds": [
+      "hub-caffeine-cutoff",
+      "hub-red-dim-night",
+      "hub-last-meal-timing",
+      "hub-pre-sleep-breath",
+      "hub-exercise-timing",
+      "hub-sleep-consistency"
+    ]
+  },
+  {
+    "id": "huberman-fitness-advanced",
+    "name": "Huberman Fitness · Advanced",
+    "description": "Layer on foundations: sprints/VO₂, heat after train, neck/posture, Zone 2, strength, exercise timing.",
+    "habitIds": [
+      "hub-vo2-sprints",
+      "hub-heat-after-training",
+      "hub-neck-mobility",
+      "hub-zone2",
+      "hub-resistance",
+      "hub-exercise-timing"
+    ]
+  },
+  {
+    "id": "huberman-metabolism",
+    "name": "Huberman Metabolism & Meals",
+    "description": "Daytime structure: morning hydrate, protein-forward meal, post-meal walk, meal buffer, midday light, Zone 2.",
+    "habitIds": [
+      "hub-morning-hydrate",
+      "hub-protein-early",
+      "hub-post-meal-walk",
+      "hub-last-meal-timing",
+      "hub-outdoor-midday",
+      "hub-zone2"
+    ]
+  },
+  {
+    "id": "huberman-mind-meditation",
+    "name": "Huberman Mind & Meditation",
+    "description": "Attention training: FA meditation, open monitoring, NSDR, self-hypnosis, visual spotlight, accountability.",
+    "habitIds": [
+      "hub-focused-attention-med",
+      "hub-open-monitoring-med",
+      "hub-nsdr",
+      "hub-self-hypnosis",
+      "hub-visual-focus-spotlight",
+      "hub-accountability-tell"
+    ]
+  },
+  {
+    "id": "huberman-light-circadian",
+    "name": "Huberman Light & Circadian",
+    "description": "Light levers only: morning outdoor, no sunglasses AM, midday dose, evening dim, red/amber night, sleep schedule.",
+    "habitIds": [
+      "hub-morning-sunlight",
+      "hub-outdoor-no-sunglasses-am",
+      "hub-outdoor-midday",
+      "hub-evening-dim",
+      "hub-red-dim-night",
+      "hub-sleep-consistency"
+    ]
   }
 ]
