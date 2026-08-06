@@ -49,6 +49,8 @@ Includes **Huberman-aligned** protocols (educational synthesis of common Huberma
 
 **Huberman packs (6 habits each):** Foundations, Sleep (+ Advanced), Focus, Fitness (+ Advanced), Stress, Social, Learning Basic / Advanced, Creativity, Breath Basic / Advanced, Dopamine & Drive, Vision, Metabolism & Meals, Mind & Meditation, Light & Circadian.
 
+**Also:** Wealth (data-backed basics / income & defense / sharp decisions), Calm but sharp (+ deep work), Mental models (build lattice / core tools / advanced).
+
 ## Data you can edit
 
 | Path | Purpose |

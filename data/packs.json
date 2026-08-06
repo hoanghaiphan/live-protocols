@@ -362,5 +362,109 @@
       "hub-red-dim-night",
       "hub-sleep-consistency"
     ]
+  },
+  {
+    "id": "wealth-data-basic",
+    "name": "Wealth · Data-backed basics",
+    "description": "Evidence-aligned money core: measure net worth, automate investing, savings rate, surplus rule, spend audit, no timing games. Merge then prune.",
+    "habitIds": [
+      "fin-net-worth-snapshot",
+      "fin-auto-invest-check",
+      "fin-savings-rate",
+      "fin-surplus-rule",
+      "fin-spend-audit-slice",
+      "fin-avoid-timing-games"
+    ]
+  },
+  {
+    "id": "wealth-data-advanced",
+    "name": "Wealth · Income & defense",
+    "description": "Raise human capital and protect downside: income skill, negotiate prep, tax-advantaged check, high-interest debt, runway, lifestyle creep.",
+    "habitIds": [
+      "fin-income-skill-hour",
+      "fin-negotiate-prep",
+      "fin-tax-advantaged-check",
+      "fin-high-interest-debt",
+      "fin-runway-weeks",
+      "fin-lifestyle-creep"
+    ]
+  },
+  {
+    "id": "wealth-data-decisions",
+    "name": "Wealth · Sharp money decisions",
+    "description": "Decision hygiene for money: weekly review, unit economics, learn a concept, compensation hygiene, admin batch, opportunity cost.",
+    "habitIds": [
+      "fin-weekly-money-review",
+      "fin-unit-economics-personal",
+      "fin-learn-one-money-concept",
+      "fin-compensation-hygiene",
+      "fin-admin-batch",
+      "mm-opportunity-cost"
+    ]
+  },
+  {
+    "id": "calm-sharp",
+    "name": "Calm but sharp",
+    "description": "Low anxiety, high focus: single-task, worry dump, alert-calm body, info diet, physiological sigh, visual focus spotlight.",
+    "habitIds": [
+      "calm-single-task",
+      "calm-worry-dump",
+      "calm-alert-body",
+      "calm-info-diet",
+      "hub-physiological-sigh",
+      "hub-visual-focus-spotlight"
+    ]
+  },
+  {
+    "id": "calm-sharp-deep",
+    "name": "Calm but sharp · Deep work",
+    "description": "Sustained calm performance: deep work, long exhale, phone-free morning, caffeine-with-plan, premortem, NSDR.",
+    "habitIds": [
+      "intel-deep-work",
+      "hub-long-exhale",
+      "hub-phone-morning",
+      "calm-caffeine-for-focus",
+      "calm-premortem-calm",
+      "hub-nsdr"
+    ]
+  },
+  {
+    "id": "mental-models-basic",
+    "name": "Mental models · Build the lattice",
+    "description": "Path to ~100 models: capture daily, apply to decisions, spaced review, Feynman, read sources, opportunity cost. Count cards—not vibes.",
+    "habitIds": [
+      "mm-capture-one",
+      "mm-apply-decision",
+      "mm-spaced-models-review",
+      "mm-feynman-model",
+      "mm-read-model-source",
+      "mm-opportunity-cost"
+    ]
+  },
+  {
+    "id": "mental-models-core-tools",
+    "name": "Mental models · Core tools",
+    "description": "High-frequency reasoning tools: inversion, second-order, base rates, circle of competence, hypothesis-validate, write-to-clarify.",
+    "habitIds": [
+      "mm-inversion",
+      "mm-second-order",
+      "mm-base-rates",
+      "mm-circle-of-competence",
+      "intel-hypothesis-validate",
+      "intel-write-to-clarify"
+    ]
+  },
+  {
+    "id": "mental-models-advanced",
+    "name": "Mental models · Advanced lattice",
+    "description": "Transfer and integrity: cross-domain mapping, kill/update bad models, teach-back, categorize learning, retrieval, deliberate practice.",
+    "habitIds": [
+      "mm-cross-domain-transfer",
+      "mm-kill-update-model",
+      "hub-teach-back",
+      "intel-categorize-daily-learning",
+      "hub-retrieval-practice",
+      "intel-deliberate-practice"
+    ]
   }
 ]
