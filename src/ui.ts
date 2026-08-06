@@ -61,7 +61,11 @@ import {
 } from './weeks'
 import { showToast } from './toast'
 
-let filterCategory: Category | 'all' = 'all'
+/**
+ * Library is hidden until user taps a radar category.
+ * `null` = closed; Category = open filtered to that axis.
+ */
+let libraryCategory: Category | null = null
 
 type ModalState =
   | null
@@ -220,18 +224,24 @@ function renderRadarStrip(selected: Habit[]): string {
   return `
     <section class="panel radar-strip">
       <div class="radar-strip-inner">
-        <div class="radar-compact">${renderRadarSvg({ scores, width: 260, height: 240 })}</div>
+        <div class="radar-compact">${renderRadarSvg({
+          scores,
+          width: 280,
+          height: 260,
+          selectedCategory: libraryCategory,
+        })}</div>
         <div class="radar-side">
           <h2>Balance <span class="muted-inline">max ${RADAR_MAX}</span></h2>
           <p class="radar-meta">
             ${
               selected.length === 0
-                ? 'Activate habits or add a pack'
+                ? 'Add a pack or tap a category on the hex to browse habits'
                 : weak
                   ? `Weakest: <strong style="color:${weakColor}">${esc(CATEGORY_LABELS[weak])}</strong> · ${selected.length} active`
                   : `${selected.length} active`
             }
           </p>
+          <p class="radar-hint">Tap a category on the hex to add habits</p>
         </div>
       </div>
     </section>
@@ -303,12 +313,12 @@ function renderActivePlan(weekKey: string): string {
   const pct = weekConsistencyPercent(habits, checks, dateKeys, targets)
   const formingWarn =
     formingN > FORMING_SOFT_MAX
-      ? `<span class="time-warn"> · ${formingN} forming (aim ~${FORMING_SOFT_MAX})</span>`
+      ? ` · aim ~${FORMING_SOFT_MAX}`
       : ''
 
   const cells =
     entries.length === 0
-      ? `<p class="empty plan-empty">No active habits — pick a pack or Activate from the library. Click a name anytime for Why &amp; How.</p>`
+      ? `<p class="empty plan-empty">No active habits yet. Add a pack, or tap a hex category to browse and activate.</p>`
       : `<div class="plan-grid">
           ${entries
             .map((e) => {
@@ -321,18 +331,22 @@ function renderActivePlan(weekKey: string): string {
 
   return `
     <section class="panel active-panel">
-      <div class="panel-title-row">
-        <h2>Active plan
-          <span class="muted-inline">Forming ${formingN} · Formed ${formedN}${formingWarn}</span>
-        </h2>
-        <div class="week-nav compact">
+      <header class="plan-header">
+        <div class="plan-header-top">
+          <h2 class="plan-title">Active plan</h2>
+          <strong class="week-pct" title="This week consistency">${pct}%</strong>
+        </div>
+        <div class="plan-stats">
+          <span class="stat-pill forming">Forming <b>${formingN}</b>${esc(formingWarn)}</span>
+          <span class="stat-pill formed">Formed <b>${formedN}</b></span>
+        </div>
+        <div class="week-nav compact plan-week">
           <button type="button" class="icon" data-action="week-prev" aria-label="Previous week">‹</button>
           <span class="week-label">${esc(formatWeekLabel(weekKey))}</span>
           <button type="button" class="icon" data-action="week-next" aria-label="Next week">›</button>
-          <button type="button" class="ghost tiny" data-action="week-today">This week</button>
-          <strong class="week-pct" title="Check-in consistency">${pct}%</strong>
+          <button type="button" class="ghost tiny" data-action="week-today">Today</button>
         </div>
-      </div>
+      </header>
       ${cells}
     </section>
   `
@@ -372,28 +386,16 @@ function renderProgressOverview(weekKey: string): string {
 
 // ── Library ────────────────────────────────────────────────────
 
-function renderLibrary(activeIds: Set<string>): string {
-  const habits = getHabits()
-  const chips = [
-    `<button type="button" class="chip ${filterCategory === 'all' ? 'active' : ''}" data-action="filter" data-category="all">All</button>`,
-    ...CATEGORIES.map((c) => {
-      const color = CATEGORY_COLORS[c]
-      const active = filterCategory === c
-      const style = active
-        ? `border-color:${color};color:${color};background:${color}22`
-        : `border-color:transparent;color:${color}`
-      return `<button type="button" class="chip ${active ? 'active' : ''}" style="${style}" data-action="filter" data-category="${c}">${esc(CATEGORY_LABELS[c])}</button>`
-    }),
-  ].join('')
+function renderLibraryDrawer(activeIds: Set<string>): string {
+  if (!libraryCategory) return ''
 
-  const list = habits.filter(
-    (h) => filterCategory === 'all' || h.category === filterCategory,
-  )
+  const cat = libraryCategory
+  const color = CATEGORY_COLORS[cat]
+  const list = getHabits().filter((h) => h.category === cat)
 
   const cards = list
     .map((h) => {
       const on = activeIds.has(h.id)
-      const color = CATEGORY_COLORS[h.category]
       const custom = isCustomHabit(h.id)
       const hub = h.secondaryTags?.includes('huberman')
       return `
@@ -404,7 +406,6 @@ function renderLibrary(activeIds: Set<string>): string {
               ${hub ? ' <em class="badge-custom">huberman</em>' : ''}
               ${custom ? ' <em class="badge-custom">custom</em>' : ''}
             </h3>
-            <span class="cat-badge" style="${catStyle(h.category)}">${esc(CATEGORY_LABELS[h.category])}</span>
           </header>
           <div class="habit-stats">
             <span>${esc(FREQUENCY_LABELS[h.frequency])}</span>
@@ -429,15 +430,18 @@ function renderLibrary(activeIds: Set<string>): string {
     .join('')
 
   return `
-    <section class="section">
-      <div class="section-head">
-        <h2>Library <span class="muted-inline">(${list.length})</span></h2>
-        <div class="section-head-actions">
-          <button type="button" class="primary" data-action="new-habit">+ Habit</button>
-          <div class="chips">${chips}</div>
+    <section class="section panel library-drawer" id="library-drawer" style="border-color:${color}66">
+      <div class="library-drawer-head">
+        <div>
+          <h2 style="color:${color}">Add · ${esc(CATEGORY_LABELS[cat])}</h2>
+          <p class="panel-hint" style="margin:0.25rem 0 0">${list.length} habits — activate to put on your plan</p>
+        </div>
+        <div class="library-drawer-actions">
+          <button type="button" class="ghost" data-action="new-habit">+ Habit</button>
+          <button type="button" class="ghost" data-action="close-library" aria-label="Close library">✕</button>
         </div>
       </div>
-      <div class="habit-grid">${cards}</div>
+      <div class="habit-grid">${cards || '<p class="empty">No habits in this category.</p>'}</div>
     </section>
   `
 }
@@ -644,14 +648,21 @@ export function renderApp(root: HTMLElement): void {
     ${renderPacksBar()}
     ${renderRadarStrip(activeHabits)}
     ${renderActivePlan(weekKey)}
+    ${renderLibraryDrawer(activeIds)}
     ${renderProgressOverview(weekKey)}
-    ${renderLibrary(activeIds)}
     ${renderHabitViewModal()}
     ${renderHabitEditModal()}
     ${renderPackModal()}
   `
 
   bindEvents(root, weekKey)
+
+  if (libraryCategory) {
+    root.querySelector('#library-drawer')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    })
+  }
 
   if (modal) {
     root
@@ -728,12 +739,34 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
 
   if (escapeHandler) document.removeEventListener('keydown', escapeHandler)
   escapeHandler = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && modal) {
+    if (e.key !== 'Escape') return
+    if (modal) {
       modal = null
+      rerender()
+      return
+    }
+    if (libraryCategory) {
+      libraryCategory = null
       rerender()
     }
   }
   document.addEventListener('keydown', escapeHandler)
+
+  root.querySelectorAll('[data-action="select-category"]').forEach((el) => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation()
+      const cat = (el as HTMLElement).dataset.category as Category | undefined
+      if (!cat || !CATEGORIES.includes(cat)) return
+      // Toggle off if same category tapped again
+      libraryCategory = libraryCategory === cat ? null : cat
+      rerender()
+    })
+  })
+
+  root.querySelector('[data-action="close-library"]')?.addEventListener('click', () => {
+    libraryCategory = null
+    rerender()
+  })
 
   root.querySelector('[data-action="week-prev"]')?.addEventListener('click', () => {
     setOverviewWeek(shiftWeek(weekKey, -1))
@@ -990,10 +1023,4 @@ function bindEvents(root: HTMLElement, weekKey: string): void {
     rerender()
   })
 
-  root.querySelectorAll('[data-action="filter"]').forEach((el) => {
-    el.addEventListener('click', () => {
-      filterCategory = (el as HTMLElement).dataset.category as Category | 'all'
-      rerender()
-    })
-  })
 }
