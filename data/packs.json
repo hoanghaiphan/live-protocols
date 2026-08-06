@@ -429,19 +429,6 @@
     ]
   },
   {
-    "id": "mental-models-basic",
-    "name": "Mental models · Build the lattice",
-    "description": "Path to ~100 models: capture daily, apply to decisions, spaced review, Feynman, read sources, opportunity cost. Count cards—not vibes.",
-    "habitIds": [
-      "mm-capture-one",
-      "mm-apply-decision",
-      "mm-spaced-models-review",
-      "mm-feynman-model",
-      "mm-read-model-source",
-      "mm-opportunity-cost"
-    ]
-  },
-  {
     "id": "mental-models-core-tools",
     "name": "Mental models · Core tools",
     "description": "High-frequency reasoning tools: inversion, second-order, base rates, circle of competence, hypothesis-validate, write-to-clarify.",
@@ -465,6 +452,201 @@
       "intel-categorize-daily-learning",
       "hub-retrieval-practice",
       "intel-deliberate-practice"
+    ]
+  },
+  {
+    "id": "mental-models-systems",
+    "name": "Mental models · Systems & leverage",
+    "description": "Core-tools style: feedback loops, bottlenecks, Pareto, margin of safety, via negativa, asymmetric bets.",
+    "habitIds": [
+      "mm-feedback-loops",
+      "mm-bottleneck",
+      "mm-pareto",
+      "mm-margin-of-safety",
+      "mm-via-negativa",
+      "mm-asymmetric-bets"
+    ]
+  },
+  {
+    "id": "mental-models-judgment",
+    "name": "Mental models · Judgment hygiene",
+    "description": "Core-tools style: incentives, map≠territory, sunk cost, probabilistic forecasts, skin in the game, local-optima escape.",
+    "habitIds": [
+      "mm-incentives",
+      "mm-map-territory",
+      "mm-sunk-cost",
+      "mm-probabilistic",
+      "mm-skin-in-game",
+      "mm-local-vs-global"
+    ]
+  },
+  {
+    "id": "mental-models-decisions-daily",
+    "name": "Mental models · Daily decisions",
+    "description": "Everyday toolkit: inversion, second-order, base rates, opportunity cost, circle of competence, System-2 slowdown.",
+    "habitIds": [
+      "mm-inversion",
+      "mm-second-order",
+      "mm-base-rates",
+      "mm-opportunity-cost",
+      "mm-circle-of-competence",
+      "tfs-system2-slowdown"
+    ]
+  },
+  {
+    "id": "kahneman-bias-basic",
+    "name": "Thinking Fast & Slow · Bias basics",
+    "description": "Catch System-1 traps: WYSIATI, anchoring, availability, substitution, affect heuristic, overconfidence.",
+    "habitIds": [
+      "tfs-wysiati",
+      "tfs-anchoring-reset",
+      "tfs-availability-audit",
+      "tfs-substitution-catch",
+      "tfs-affect-heuristic",
+      "tfs-overconfidence-calibrate"
+    ]
+  },
+  {
+    "id": "kahneman-decisions",
+    "name": "Thinking Fast & Slow · Better decisions",
+    "description": "Outside view, planning fallacy buffers, loss aversion, regression to mean, intuition domains, System-2 slowdown.",
+    "habitIds": [
+      "tfs-outside-view",
+      "tfs-planning-fallacy",
+      "tfs-loss-aversion-aware",
+      "tfs-regression-mean",
+      "tfs-intuition-domain",
+      "tfs-system2-slowdown"
+    ]
+  },
+  {
+    "id": "kahneman-work-practice",
+    "name": "Thinking Fast & Slow · At work",
+    "description": "Apply Kahneman at work: premortem, base rates, write-to-clarify, hypothesis-validate, planning buffer, single-task.",
+    "habitIds": [
+      "calm-premortem-calm",
+      "mm-base-rates",
+      "intel-write-to-clarify",
+      "intel-hypothesis-validate",
+      "tfs-planning-fallacy",
+      "calm-single-task"
+    ]
+  },
+  {
+    "id": "elon-algorithm",
+    "name": "Elon · The algorithm",
+    "description": "Question requirements, delete, simplify/via negativa, accelerate cycles, reality tests, automate last.",
+    "habitIds": [
+      "elon-delete-requirement",
+      "mm-via-negativa",
+      "elon-accelerate-cycle",
+      "elon-reality-feedback",
+      "elon-automate-last",
+      "elon-first-principles"
+    ]
+  },
+  {
+    "id": "elon-execution",
+    "name": "Elon · Execution intensity",
+    "description": "Critical-path urgency, first principles, ship weekly, bottleneck hunting, deep work, top-3 force rank.",
+    "habitIds": [
+      "elon-urgency-block",
+      "elon-first-principles",
+      "career-ship-weekly",
+      "mm-bottleneck",
+      "intel-deep-work",
+      "career-top3-force-rank"
+    ]
+  },
+  {
+    "id": "jobs-focus-craft",
+    "name": "Steve Jobs · Focus & craft",
+    "description": "Say no, end-to-end craft, simplify interfaces, high-bar demos, taste study, walking thinking.",
+    "habitIds": [
+      "jobs-say-no",
+      "jobs-end-to-end-craft",
+      "jobs-simplify-interface",
+      "jobs-high-bar-demo",
+      "jobs-taste-reference",
+      "jobs-walk-think"
+    ]
+  },
+  {
+    "id": "jobs-product-sense",
+    "name": "Steve Jobs · Product sense",
+    "description": "User-visible quality: craft pass, simplify, demo bar, ship weekly, feedback loop, make for someone.",
+    "habitIds": [
+      "jobs-end-to-end-craft",
+      "jobs-simplify-interface",
+      "jobs-high-bar-demo",
+      "career-ship-weekly",
+      "career-feedback-loop",
+      "create-make-for-someone"
+    ]
+  },
+  {
+    "id": "pg-startup-habits",
+    "name": "Paul Graham · Startup habits",
+    "description": "Make something people want, don’t-scale hustle, schlep, launch early, resourcefulness, stay upwind.",
+    "habitIds": [
+      "pg-make-something-people-want",
+      "pg-do-things-not-scale",
+      "pg-schlep-blindness",
+      "pg-launch-early",
+      "pg-relentlessly-resourceful",
+      "pg-stay-upwind"
+    ]
+  },
+  {
+    "id": "pg-thinker-builder",
+    "name": "Paul Graham · Thinker-builder",
+    "description": "Write to think, ignore prestige, upwind work, ship/launch thin, user truth, clear essays of belief.",
+    "habitIds": [
+      "pg-write-to-think",
+      "pg-ignore-prestige",
+      "pg-stay-upwind",
+      "pg-launch-early",
+      "pg-make-something-people-want",
+      "intel-write-to-clarify"
+    ]
+  },
+  {
+    "id": "life-protocols-system",
+    "name": "Life Protocols · Run the system",
+    "description": "From your Grok design: forming cap, weakest-category feed, high-signal audit, MED-first, export backup, 2-minute review.",
+    "habitIds": [
+      "lp-forming-cap",
+      "lp-balance-weakest",
+      "lp-high-signal-only",
+      "lp-med-first",
+      "lp-export-backup",
+      "lp-two-minute-review"
+    ]
+  },
+  {
+    "id": "life-protocols-pro-stack",
+    "name": "Life Protocols · Demanding pro stack",
+    "description": "For hard-training + hard-tech work: sleep lock, deep work, top-3, ship weekly, recovery Zone-2, relationship CRM.",
+    "habitIds": [
+      "health-sleep-window",
+      "intel-deep-work",
+      "career-top3-force-rank",
+      "career-ship-weekly",
+      "health-zone2-recovery",
+      "social-relationship-crm"
+    ]
+  },
+  {
+    "id": "life-protocols-elon-method",
+    "name": "Life Protocols · Elon method live",
+    "description": "Requirements less dumb: delete requirement, via negativa, accelerate, automate last, high-signal audit, obvious problems.",
+    "habitIds": [
+      "elon-delete-requirement",
+      "mm-via-negativa",
+      "elon-accelerate-cycle",
+      "elon-automate-last",
+      "lp-high-signal-only",
+      "career-obvious-problems"
     ]
   }
 ]
